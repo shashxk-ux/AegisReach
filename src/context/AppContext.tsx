@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Prospect, PersonaType, SourcingChannel, EmailAccount, FunnelStats } from '../types';
+import { Prospect, PersonaType, EmailAccount, FunnelStats } from '../types';
 import { INITIAL_PROSPECTS, PERSONA_STRATEGIES, CONNECTED_ACCOUNTS, INITIAL_FUNNEL_STATS } from '../data/mockData';
 import confetti from 'canvas-confetti';
 
@@ -10,13 +10,15 @@ interface ToastMessage {
   description: string;
 }
 
+export type TabType = 'prospects' | 'icp' | 'personas' | 'review' | 'accounts' | 'analytics' | 'casestudy';
+
 interface AppContextType {
   prospects: Prospect[];
   selectedProspect: Prospect | null;
   selectedProspectId: string | null;
   setSelectedProspectId: (id: string | null) => void;
-  activeTab: 'prospects' | 'icp' | 'personas' | 'review' | 'accounts' | 'analytics' | 'casestudy';
-  setActiveTab: (tab: 'prospects' | 'icp' | 'personas' | 'review' | 'accounts' | 'analytics' | 'casestudy') => void;
+  activeTab: TabType;
+  setActiveTab: (tab: TabType) => void;
   mode: 'observer' | 'autopilot';
   setMode: (mode: 'observer' | 'autopilot') => void;
   credits: number;
@@ -42,6 +44,7 @@ interface AppContextType {
   setIsDrawerOpen: (open: boolean) => void;
   openDossier: (prospectId: string) => void;
   closeDossier: () => void;
+  importProspects: (newProspects: Prospect[], sourceName?: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -286,6 +289,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
+  const importProspects = (newProspects: Prospect[], sourceName: string = 'XLS Spreadsheet') => {
+    setProspects(prev => [...newProspects, ...prev]);
+    if (newProspects.length > 0) {
+      setSelectedProspectId(newProspects[0].id);
+    }
+    setFunnelStats(prev => ({
+      ...prev,
+      totalSourced: prev.totalSourced + newProspects.length,
+      tier1Validated: prev.tier1Validated + newProspects.length,
+    }));
+
+    try {
+      confetti({
+        particleCount: 65,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    } catch {
+      // safe fallback
+    }
+
+    showToast(
+      'success',
+      `Leads Ingested from ${sourceName}`,
+      `Successfully injected ${newProspects.length} verified CISO records directly into Prospect Pipeline with Tier-1 Cheap Pass active ($0).`
+    );
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -319,7 +350,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isDrawerOpen,
         setIsDrawerOpen,
         openDossier,
-        closeDossier
+        closeDossier,
+        importProspects
       }}
     >
       {children}

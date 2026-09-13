@@ -509,3 +509,217 @@ export const INITIAL_FUNNEL_STATS: FunnelStats = {
   objectionCount: 6,
   dncCount: 3
 };
+
+export const SAMPLE_XLS_PROSPECTS: Prospect[] = [
+  {
+    id: 'xls-pr-201',
+    name: 'Jonathan Hayes',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    title: 'Chief Information Security Officer',
+    company: 'Raytheon Defense Systems',
+    companySize: '14,500 employees',
+    industry: 'Defense & Aerospace Systems',
+    location: 'Arlington, VA',
+    source: 'XLS Import',
+    tier1CheapPass: {
+      verified: true,
+      syntaxValid: true,
+      mxActive: true,
+      publicFootprintFound: true,
+      cost: 0
+    },
+    tier2Enriched: {
+      unlocked: false,
+      workEmail: 'j.hayes@raytheon-ds.defense.gov',
+      directPhone: '+1 (703) 841-4200',
+      creditCost: 1
+    },
+    techStack: [
+      { name: 'Palo Alto PAN-OS', category: 'Perimeter Firewall', detectedVia: 'Passive Shodan Banner' },
+      { name: 'Cisco ASA', category: 'VPN Gateway', detectedVia: 'DNS Records' }
+    ],
+    matchedVulnerability: {
+      cveId: 'CVE-2024-3400',
+      name: 'Palo Alto PAN-OS GlobalProtect Command Injection',
+      severity: 'Critical',
+      cvss: 10.0,
+      epssScore: '92.4%',
+      cisaKev: true,
+      advisorySource: 'CISA KEV / Palo Alto Advisory',
+      summary: 'Arbitrary code execution in PAN-OS GlobalProtect gateway enabled unauthenticated root intrusion.',
+      businessImpact: 'Perimeter bypass threatening DoD CMMC Level 3 compliance and cleared defense secrets.'
+    },
+    persona: {
+      type: 'compliance',
+      label: 'Compliance-Oriented CISO',
+      confidence: 96,
+      rationale: 'DoD prime defense contractor requires strict CMMC 2.0 and NIST 800-171 zero-trust adherence.',
+      triggerSignals: ['DoD Contract Mandates', 'CMMC 2.0 Audit Pending', 'Defense Industrial Base (DIB) Member'],
+      recommendedTone: 'Formal, regulatory-grounded, audit-proof risk containment.'
+    },
+    outreachDraft: {
+      subject: 'Jonathan: CMMC compliance & mitigating CVE-2024-3400 in Raytheon perimeter',
+      body: `Hi Jonathan,
+
+With DoD prime contractors facing renewed DFARS 252.204-7012 audits, active exploitation of CVE-2024-3400 (PAN-OS GlobalProtect) creates significant audit exposure for Raytheon Defense Systems' perimeter.
+
+AegisReach provides isolated socket-level gating for unpatched edge devices, ensuring continuous CMMC 2.0 alignment without requiring emergency maintenance downtime.
+
+Would you be open to reviewing a 2-page brief on our isolated enclave architecture?
+
+Best regards,
+Shashank
+AegisReach Security Architecture`,
+      previewHook: 'Zero-downtime enclave protection for active PAN-OS perimeter exploits under CMMC 2.0.',
+      isDraftedInGmail: false,
+      status: 'pending_review'
+    },
+    researchSignals: {
+      linkedinBioSnippet: 'Senior CISO specializing in defense supply chain resilience, CMMC Level 3 compliance, and zero-trust perimeter defense for defense contractors.',
+      recentPublications: ['DoD Industrial Base Zero Trust Framework (2025)', 'Securing Hybrid Cloud Aerospace Enclaves'],
+      recentTalks: ['AFCEA Cyber Summit: Zero-Trust Defense Perimeter Architecture'],
+      awardsOrCertifications: ['CISSP', 'CISM', 'DoD Top Secret / SCI Cleared']
+    }
+  },
+  {
+    id: 'xls-pr-202',
+    name: 'Dr. Priya Patel',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+    title: 'Global Head of Cybersecurity & HIPAA Privacy',
+    company: 'Novartis Healthcare Network',
+    companySize: '32,000 employees',
+    industry: 'Healthcare & Life Sciences',
+    location: 'Boston, MA',
+    source: 'XLS Import',
+    tier1CheapPass: {
+      verified: true,
+      syntaxValid: true,
+      mxActive: true,
+      publicFootprintFound: true,
+      cost: 0
+    },
+    tier2Enriched: {
+      unlocked: false,
+      workEmail: 'priya.patel@novartis-hn.org',
+      directPhone: '+1 (617) 871-7000',
+      creditCost: 1
+    },
+    techStack: [
+      { name: 'Citrix NetScaler', category: 'ADC & Gateway', detectedVia: 'HTTP Header Leak' },
+      { name: 'Epic Systems EMR', category: 'Healthcare Records', detectedVia: 'Public Portal SSL' }
+    ],
+    matchedVulnerability: {
+      cveId: 'CVE-2023-4966',
+      name: 'Citrix NetScaler Bleed Session Hijack',
+      severity: 'Critical',
+      cvss: 9.4,
+      epssScore: '89.1%',
+      cisaKev: true,
+      advisorySource: 'HHS Health-ISAC / CISA KEV',
+      summary: 'Sensitive memory disclosure in NetScaler allows unauthenticated adversaries to bypass MFA session tokens.',
+      businessImpact: 'Unauthenticated hospital clinical EMR session hijacking risking OCR HIPAA multi-million fines.'
+    },
+    persona: {
+      type: 'soc_ops',
+      label: 'SOC / Ops-Oriented CISO',
+      confidence: 94,
+      rationale: 'Oversees 24/7 clinical SOC operations where EHR downtime poses direct patient safety threats.',
+      triggerSignals: ['24/7 Clinical Network Hospital Alert', 'Health-ISAC Advisory Sync', 'HIPAA Breach Liability'],
+      recommendedTone: 'Urgent, operationally actionable, zero clinical workflow disruption.'
+    },
+    outreachDraft: {
+      subject: 'Dr. Patel: 24/7 Citrix NetScaler token isolation for Novartis clinical records',
+      body: `Hi Dr. Patel,
+
+Given recent Health-ISAC warnings regarding Citrix Bleed (CVE-2023-4966) token replay attacks, clinical access gateways running NetScaler require rapid containment before adversary persistence occurs.
+
+AegisReach delivers real-time session token invalidation and eBPF network telemetry that shields hospital EHR endpoints without impacting clinical physician logins.
+
+Would 10 minutes next Tuesday work to compare telemetry logs against your current SIEM alerts?
+
+Best regards,
+Shashank
+AegisReach Security Architecture`,
+      previewHook: 'Automated NetScaler session hijacking containment without hospital EHR downtime.',
+      isDraftedInGmail: false,
+      status: 'pending_review'
+    },
+    researchSignals: {
+      linkedinBioSnippet: 'Healthcare CISO driving clinical cybersecurity, biomedical device isolation, and HIPAA audit readiness across 30+ regional medical centers.',
+      recentPublications: ['Clinical Device Segmentation & HIPAA Security Rule (2025)'],
+      recentTalks: ['HIMSS Cyber Keynote: Defending Connected Hospital IoT Infrastructure'],
+      awardsOrCertifications: ['CISSP-ISSAP', 'HCISPP', 'Health-ISAC Fellow 2025']
+    }
+  },
+  {
+    id: 'xls-pr-203',
+    name: 'Daniel Lindqvist',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+    title: 'VP Security Engineering & Cloud Architecture',
+    company: 'Klarna Nordic Payments',
+    companySize: '6,200 employees',
+    industry: 'Financial Services & FinTech',
+    location: 'Stockholm, Sweden',
+    source: 'XLS Import',
+    tier1CheapPass: {
+      verified: true,
+      syntaxValid: true,
+      mxActive: true,
+      publicFootprintFound: true,
+      cost: 0
+    },
+    tier2Enriched: {
+      unlocked: false,
+      workEmail: 'daniel.lindqvist@klarna-nordic.se',
+      directPhone: '+46 8 120 120 00',
+      creditCost: 1
+    },
+    techStack: [
+      { name: 'Kubernetes EKS', category: 'Container Orchestration', detectedVia: 'Cluster Ingress' },
+      { name: 'HashiCorp Vault', category: 'Secrets Management', detectedVia: 'Public API Discovery' }
+    ],
+    matchedVulnerability: {
+      cveId: 'CVE-2024-21626',
+      name: 'runc Container Breakout via Leaked File Descriptor',
+      severity: 'High',
+      cvss: 8.6,
+      epssScore: '78.5%',
+      cisaKev: true,
+      advisorySource: 'Open Source Security Foundation (OpenSSF)',
+      summary: 'Flaw in runc allows container process to access host filesystem via internally leaked file descriptor.',
+      businessImpact: 'Host node takeover in multi-tenant payment processing Kubernetes cluster.'
+    },
+    persona: {
+      type: 'technical',
+      label: 'Technical / Architecture CISO',
+      confidence: 97,
+      rationale: 'Former kernel engineer turned security VP; demands eBPF, socket-level hooks, and open source proof.',
+      triggerSignals: ['Multi-tenant EKS Cluster', 'PCI-DSS v4.0 Container Isolation', 'eBPF Kernel Tracing'],
+      recommendedTone: 'Low-BS, architecture-first, socket-level implementation details.'
+    },
+    outreachDraft: {
+      subject: 'Daniel: eBPF socket-level runtime guard for CVE-2024-21626 in Klarna EKS clusters',
+      body: `Hi Daniel,
+
+With runc container escape vectors (CVE-2024-21626) targeting shared node architectures, host filesystem descriptor leakage poses a distinct challenge for multi-tenant payment pipelines.
+
+Instead of heavy user-space daemon overhead, AegisReach enforces kernel-level eBPF socket tracing that traps illegitimate descriptor access before syscall completion.
+
+Here is our benchmark harness: https://github.com/aegisreach/ebpf-container-guard. Would you or your lead infrastructure architect be open to stress-testing it in a sandbox cluster?
+
+Best regards,
+Shashank
+AegisReach Security Architecture`,
+      previewHook: 'Zero-overhead eBPF container breakout interception for PCI-DSS v4.0 clusters.',
+      isDraftedInGmail: false,
+      status: 'pending_review'
+    },
+    researchSignals: {
+      linkedinBioSnippet: 'VP of Security Engineering with roots in Linux kernel dev, spearheading eBPF runtime observability, container boundaries, and cloud-native resilience.',
+      recentPublications: ['eBPF In-Kernel Security Observability in High-Throughput FinTech'],
+      recentTalks: ['KubeCon Europe: Hardening Multi-Tenant Payment Microservices'],
+      awardsOrCertifications: ['CKA', 'CKAD', 'OSCP', 'Linux Foundation Contributor']
+    }
+  }
+];
+

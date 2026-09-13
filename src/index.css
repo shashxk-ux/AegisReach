@@ -2,15 +2,83 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@layer base {
-  :root {
-    --bg-primary: #080b12;
-    --bg-secondary: #0d121f;
-    --bg-card: rgba(18, 24, 38, 0.7);
-    --border-subtle: rgba(255, 255, 255, 0.08);
-    --border-accent: rgba(59, 130, 246, 0.3);
-  }
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #0891b2;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #e0f2fe;
+  --accent-foreground: #0369a1;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: #cbd5e1;
+  --ring: #0891b2;
+  --radius: 0.625rem;
+  
+  --bg-primary: #080b12;
+  --bg-secondary: #0d121f;
+  --bg-card: rgba(18, 24, 38, 0.7);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(59, 130, 246, 0.3);
+}
 
+.dark {
+  --background: #06090e;
+  --foreground: #f8fafc;
+  --card: #0c111d;
+  --card-foreground: #f8fafc;
+  --popover: #0c111d;
+  --popover-foreground: #f8fafc;
+  --primary: #06b6d4;
+  --primary-foreground: #020617;
+  --secondary: #131d2e;
+  --secondary-foreground: #f8fafc;
+  --muted: #131d2e;
+  --muted-foreground: #94a3b8;
+  --accent: #083344;
+  --accent-foreground: #22d3ee;
+  --destructive: #7f1d1d;
+  --destructive-foreground: #f8fafc;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #06b6d4;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+@layer base {
   body {
     font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     overflow-x: hidden;
@@ -373,19 +441,19 @@ html.light ::-webkit-scrollbar-thumb:hover {
 }
 
 /* ==========================================================================
-   DARK THEME BASE
+   DARK THEME BASE & TACTILE POLISH
    ========================================================================== */
 html.dark {
   color-scheme: dark;
 }
 
 html.dark body {
-  background-color: #080b12;
+  background-color: #080c14;
   color: #f1f5f9;
 }
 
 html.dark ::-webkit-scrollbar-track {
-  background: #080b12;
+  background: #080c14;
 }
 html.dark ::-webkit-scrollbar-thumb {
   background: #1e293b;
@@ -402,19 +470,26 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   border-radius: 9999px;
 }
 
-/* Custom glow effects in dark mode */
+/* Tactile button micro-interactions */
+button:active:not(:disabled) {
+  transform: scale(0.985);
+  transition: transform 0.08s ease;
+}
+
+/* Custom specular glow effects */
 .glow-cyan {
-  box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.35);
+  box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.35);
 }
 
 .glow-violet {
-  box-shadow: 0 0 25px -5px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 0 20px -3px rgba(139, 92, 246, 0.35);
 }
 
 .glow-emerald {
-  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.35);
 }
 
 .glow-amber {
-  box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.35);
+  box-shadow: 0 0 20px -3px rgba(245, 158, 11, 0.35);
 }
+

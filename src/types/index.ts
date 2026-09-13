@@ -1,6 +1,6 @@
 export type PersonaType = 'compliance' | 'soc_ops' | 'vulnerability_mgmt' | 'technical';
 
-export type SourcingChannel = 'ZoomInfo' | 'Apollo' | 'Trivly' | 'CSV Upload' | 'Public URL';
+export type SourcingChannel = 'ZoomInfo' | 'Apollo' | 'Trivly' | 'CSV Upload' | 'Public URL' | 'XLS Import';
 
 export interface TechStackItem {
   name: string;
