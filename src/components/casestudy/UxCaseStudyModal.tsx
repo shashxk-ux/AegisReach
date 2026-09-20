@@ -18,7 +18,6 @@ export const UxCaseStudyModal: React.FC<UxCaseStudyModalProps> = ({ onClose }) =
     <div className="space-y-8 max-w-5xl mx-auto pb-12">
       {/* Top Banner */}
       <div className="p-8 rounded-3xl bg-card border border-border shadow-diffuse relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
         
         {onClose && (
           <div className="absolute top-6 right-6 z-20">
@@ -26,7 +25,7 @@ export const UxCaseStudyModal: React.FC<UxCaseStudyModalProps> = ({ onClose }) =
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="text-slate-400 hover:text-white hover:bg-white/10"
+              className="text-muted-foreground hover:text-foreground hover:bg-muted"
               aria-label="Close Case Study"
             >
               <X className="w-5 h-5" />
@@ -36,26 +35,26 @@ export const UxCaseStudyModal: React.FC<UxCaseStudyModalProps> = ({ onClose }) =
 
         <div className="relative z-10 space-y-3">
           <Badge variant="purple" className="gap-2">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <Sparkles className="w-3.5 h-3.5 text-warning" />
             <span>Product Design Portfolio Specification & Rationale</span>
           </Badge>
 
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
             AegisReach: Designing an AI Campaign Decision Engine for Cybersecurity Sales
           </h2>
 
-          <p className="text-sm text-slate-300 max-w-3xl leading-relaxed">
+          <p className="text-sm text-muted-foreground max-w-3xl leading-relaxed">
             A comprehensive case study on information architecture, trust calibration, cost-conscious data gating, and dynamic persona-based decision synthesis in complex enterprise B2B SaaS.
           </p>
 
-          <div className="pt-2 flex flex-wrap items-center gap-3 text-xs text-slate-400">
-            <span className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 font-medium">
+          <div className="pt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+            <span className="px-2.5 py-1 rounded-lg bg-muted border border-border text-muted-foreground font-medium">
               Role: Lead Product Designer & Systems Architect
             </span>
-            <span className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 font-medium">
+            <span className="px-2.5 py-1 rounded-lg bg-muted border border-border text-muted-foreground font-medium">
               Domain: B2B Cybersecurity SaaS
             </span>
-            <span className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 font-medium">
+            <span className="px-2.5 py-1 rounded-lg bg-muted border border-border text-muted-foreground font-medium">
               Target User: Security Account Executives & SDRs
             </span>
           </div>
@@ -65,27 +64,27 @@ export const UxCaseStudyModal: React.FC<UxCaseStudyModalProps> = ({ onClose }) =
       {/* 1. The Core UX Challenge & Problem Statement */}
       <div className="p-6 rounded-2xl bg-card border border-border space-y-4">
         <h3 className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
-          <Target className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+          <Target className="w-4 h-4 text-brand" />
           <span>1. The Problem Space: Why Traditional Cold Outbound Fails with CISOs</span>
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
           <div className="p-4 rounded-xl bg-muted/40 border border-border space-y-2">
-            <div className="font-bold text-red-500">The "Spam Cannon" Chasm</div>
+            <div className="font-bold text-danger">The "Spam Cannon" Chasm</div>
             <p className="text-muted-foreground leading-relaxed">
               CISOs receive 80+ cold vendor emails daily. Generic template personalization (e.g. <em>"Saw your company had 5,000 employees"</em>) is immediately filtered to spam.
             </p>
           </div>
 
           <div className="p-4 rounded-xl bg-muted/40 border border-border space-y-2">
-            <div className="font-bold text-amber-500">The CISO Persona Bifurcation</div>
+            <div className="font-bold text-warning">The CISO Persona Bifurcation</div>
             <p className="text-muted-foreground leading-relaxed">
               Pitching a deep assembly-level exploit to a compliance-focused CISO guarantees an unsubscribe; pitching audit frameworks to a technical architecture CISO looks amateur.
             </p>
           </div>
 
           <div className="p-4 rounded-xl bg-muted/40 border border-border space-y-2">
-            <div className="font-semibold text-cyan-600 dark:text-cyan-400">The API Credit Drain</div>
+            <div className="font-semibold text-brand">The API Credit Drain</div>
             <p className="text-muted-foreground leading-relaxed">
               Sales reps burn through expensive Apollo/ZoomInfo credits ($1–$3/lead) fetching contact records for domains that bounce or lack verified perimeters.
             </p>
@@ -96,19 +95,19 @@ export const UxCaseStudyModal: React.FC<UxCaseStudyModalProps> = ({ onClose }) =
       {/* 2. Key UX Innovations & Systems Architecture */}
       <div className="p-6 rounded-2xl bg-card border border-border space-y-5">
         <h3 className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
-          <BrainCircuit className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+          <BrainCircuit className="w-4 h-4 text-steel" />
           <span>2. Strategic Product Decisions & UX Innovations</span>
         </h3>
 
         <div className="space-y-4">
           {/* Innovation 1: Persona Decision Engine */}
-          <div className="p-5 rounded-2xl bg-muted/40 border border-purple-500/30 space-y-2.5">
+          <div className="p-5 rounded-2xl bg-muted/40 border border-steel/30 space-y-2.5">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-purple-500" />
+                <span className="w-2 h-2 rounded-full bg-steel" />
                 <span>The AI Persona Decision Engine (Beyond Naive Variables)</span>
               </h4>
-              <Badge variant="purple" className="font-mono text-[10px]">
+              <Badge variant="purple" className="font-mono text-xs">
                 Core Differentiator
               </Badge>
             </div>
@@ -118,13 +117,13 @@ export const UxCaseStudyModal: React.FC<UxCaseStudyModalProps> = ({ onClose }) =
           </div>
 
           {/* Innovation 2: 2-Tier Credit Gating */}
-          <div className="p-5 rounded-2xl bg-muted/40 border border-emerald-500/30 space-y-2.5">
+          <div className="p-5 rounded-2xl bg-muted/40 border border-success/30 space-y-2.5">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="w-2 h-2 rounded-full bg-success" />
                 <span>2-Tier Cost-Conscious Data Gating</span>
               </h4>
-              <Badge variant="emerald" className="font-mono text-[10px]">
+              <Badge variant="emerald" className="font-mono text-xs">
                 Cost Optimization UX
               </Badge>
             </div>
@@ -138,13 +137,13 @@ export const UxCaseStudyModal: React.FC<UxCaseStudyModalProps> = ({ onClose }) =
           </div>
 
           {/* Innovation 3: Observer Mode & Trust Calibration */}
-          <div className="p-5 rounded-2xl bg-muted/40 border border-cyan-500/30 space-y-2.5">
+          <div className="p-5 rounded-2xl bg-muted/40 border border-brand/30 space-y-2.5">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-500" />
+                <span className="w-2 h-2 rounded-full bg-brand" />
                 <span>Observer Mode: Calibrating User Trust with Gmail Drafts</span>
               </h4>
-              <Badge variant="cyan" className="font-mono text-[10px]">
+              <Badge variant="cyan" className="font-mono text-xs">
                 Human-in-the-Loop UX
               </Badge>
             </div>
@@ -158,12 +157,12 @@ export const UxCaseStudyModal: React.FC<UxCaseStudyModalProps> = ({ onClose }) =
       {/* 3. Information Architecture & User Journey Flow */}
       <div className="p-6 rounded-2xl bg-card border border-border space-y-4">
         <h3 className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
-          <Workflow className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+          <Workflow className="w-4 h-4 text-brand" />
           <span>3. End-to-End Information Architecture Flow</span>
         </h3>
 
         <div className="p-4 rounded-xl bg-muted/40 border border-border font-mono text-xs text-foreground space-y-2 overflow-x-auto shadow-2xs">
-          <div className="text-cyan-600 dark:text-cyan-400 font-bold">// AegisReach Systems Pipeline</div>
+          <div className="text-brand font-bold">// AegisReach Systems Pipeline</div>
           <div className="flex items-center gap-2 text-muted-foreground py-1">
             <Badge variant="outline">1. Define ICP</Badge>
             <span>→</span>
@@ -188,33 +187,33 @@ export const UxCaseStudyModal: React.FC<UxCaseStudyModalProps> = ({ onClose }) =
       {/* 4. Design Tokens & UI Aesthetics */}
       <div className="p-6 rounded-2xl bg-card border border-border space-y-4">
         <h3 className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
-          <Palette className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <Palette className="w-4 h-4 text-success" />
           <span>4. Visual Language, Color Semantics & UI Craft</span>
         </h3>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
           <div className="p-3.5 rounded-xl bg-muted/30 border border-border space-y-1.5">
-            <div className="w-full h-4 rounded bg-cyan-500 shadow-sm" />
+            <div className="w-full h-4 rounded bg-brand shadow-sm" />
             <div className="font-bold text-foreground">Electric Cyan (#06B6D4)</div>
-            <div className="text-[11px] text-muted-foreground">Primary brand, active intelligence, radar data</div>
+            <div className="text-xs text-muted-foreground">Primary brand, active intelligence, radar data</div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-muted/30 border border-border space-y-1.5">
-            <div className="w-full h-4 rounded bg-emerald-500 shadow-sm" />
+            <div className="w-full h-4 rounded bg-success shadow-sm" />
             <div className="font-bold text-foreground">Secure Emerald (#10B981)</div>
-            <div className="text-[11px] text-muted-foreground">Tier-1 validated, positive replies, 98%+ health</div>
+            <div className="text-xs text-muted-foreground">Tier-1 validated, positive replies, 98%+ health</div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-muted/30 border border-border space-y-1.5">
-            <div className="w-full h-4 rounded bg-red-500 shadow-sm" />
+            <div className="w-full h-4 rounded bg-danger shadow-sm" />
             <div className="font-bold text-foreground">Vulnerability Crimson (#EF4444)</div>
-            <div className="text-[11px] text-muted-foreground">Critical CVEs, active KEV exploits, DNC suppression</div>
+            <div className="text-xs text-muted-foreground">Critical CVEs, active KEV exploits, DNC suppression</div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-muted/30 border border-border space-y-1.5">
-            <div className="w-full h-4 rounded bg-purple-500 shadow-sm" />
+            <div className="w-full h-4 rounded bg-steel shadow-sm" />
             <div className="font-bold text-foreground">Decision Violet (#A855F7)</div>
-            <div className="text-[11px] text-muted-foreground">Persona classification, LLM prompt synthesis</div>
+            <div className="text-xs text-muted-foreground">Persona classification, LLM prompt synthesis</div>
           </div>
         </div>
       </div>

@@ -1,16 +1,30 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { Card, Badge, Button } from '../ui';
-import { 
-  Flame, 
-  ShieldCheck, 
-  RotateCw, 
-  Plus, 
-  Mail, 
-  CheckCircle2, 
-  Cpu,
-  Clock
-} from 'lucide-react';
+import { stepLabel } from '../layout/nav';
+import { Bar } from '../ui/motion';
+import { Card, Badge, Button, PageHeader } from '../ui';
+import { Flame, ShieldCheck, RotateCw, Plus, Mail, CheckCircle2, Cpu, Clock } from 'lucide-react';
+
+const rotationSteps = [
+  {
+    icon: Cpu,
+    color: 'text-brand',
+    title: 'Round-robin load balancing',
+    body: 'Dispatches are spread evenly across the inbox pool so no single Google Workspace account exceeds its sending rate limit.',
+  },
+  {
+    icon: Clock,
+    color: 'text-success',
+    title: 'Human-emulation jitter',
+    body: 'Randomized delays of 180 to 420 seconds between sends mimic how an executive actually writes and sends email.',
+  },
+  {
+    icon: ShieldCheck,
+    color: 'text-warning',
+    title: 'Automatic cool-down circuit',
+    body: 'If an inbox gets an SPF or DKIM warning or a temporary bounce, the router pauses it for 24 hours.',
+  },
+];
 
 export const AccountWarmup: React.FC = () => {
   const { accounts, showToast } = useApp();
@@ -24,171 +38,137 @@ export const AccountWarmup: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
-      {/* Top Banner */}
-      <Card className="p-6 bg-card">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div>
-            <Badge variant="amber" className="gap-2 mb-2">
-              <Flame className="w-3.5 h-3.5" />
-              <span>Deliverability & Inbox Infrastructure</span>
-            </Badge>
-            <h2 className="text-xl font-bold text-foreground tracking-tight">Email Warming & Multi-Account Rotation</h2>
-            <p className="text-xs text-muted-foreground mt-1 max-w-2xl leading-relaxed">
-              Protect domain reputation and ensure 99%+ inbox placement. AegisReach balances daily volume limits across connected Google Workspace inboxes with algorithmic sending jitter.
-            </p>
-          </div>
-
-          <Button
-            variant="cyan"
-            onClick={handleConnectNewAccount}
-            className="gap-2 font-semibold shrink-0"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Connect Gmail Inbox</span>
+    <div className="space-y-10">
+      <PageHeader
+        eyebrow={stepLabel('accounts')}
+        title="Email Warming & Inbox Rotation"
+        description="Protect domain reputation and keep inbox placement high. AegisReach balances daily volume across connected Google Workspace inboxes and adds human-like sending jitter."
+        actions={
+          <Button variant="cyan" onClick={handleConnectNewAccount}>
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            Connect Gmail inbox
           </Button>
-        </div>
+        }
+      />
+
+      <Card>
+        <dl className="grid grid-cols-2 divide-border md:grid-cols-4 md:divide-x">
+          <div className="space-y-1.5 border-b border-border p-6 md:border-b-0">
+            <dt className="text-sm text-muted-foreground">Connected accounts</dt>
+            <dd className="font-mono text-3xl font-semibold text-foreground">{accounts.length}</dd>
+            <dd className="flex items-center gap-1.5 text-sm text-success">
+              <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
+              All tokens authenticated
+            </dd>
+          </div>
+          <div className="space-y-1.5 border-b border-l border-border p-6 md:border-b-0 md:border-l-0">
+            <dt className="text-sm text-muted-foreground">Combined daily quota</dt>
+            <dd className="font-mono text-3xl font-semibold text-foreground">125</dd>
+            <dd className="text-sm text-muted-foreground">50 sent today (40% capacity)</dd>
+          </div>
+          <div className="space-y-1.5 p-6">
+            <dt className="text-sm text-muted-foreground">Reputation score</dt>
+            <dd className="font-mono text-3xl font-semibold text-success">98.2%</dd>
+            <dd className="text-sm text-muted-foreground">0 spam complaints recorded</dd>
+          </div>
+          <div className="space-y-1.5 border-l border-border p-6 md:border-l-0">
+            <dt className="text-sm text-muted-foreground">Sending jitter</dt>
+            <dd className="font-mono text-3xl font-semibold text-foreground">3-7 min</dd>
+            <dd className="text-sm text-muted-foreground">Simulates human cadence</dd>
+          </div>
+        </dl>
       </Card>
 
-      {/* Overview Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-4 space-y-1">
-          <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Connected Accounts</div>
-          <div className="text-2xl font-extrabold text-foreground font-mono">{accounts.length} Inboxes</div>
-          <div className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-semibold">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>All OAuth tokens authenticated</span>
-          </div>
-        </Card>
+      <section aria-labelledby="pool-heading" className="space-y-4">
+        <h2 id="pool-heading" className="flex items-center gap-2 border-b border-border pb-4 text-lg font-semibold text-foreground">
+          <Mail className="h-5 w-5 text-brand" aria-hidden="true" />
+          Inboxes in the rotation pool
+          <span className="font-mono text-base font-normal text-muted-foreground">({accounts.length})</span>
+        </h2>
 
-        <Card className="p-4 space-y-1">
-          <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Combined Quota</div>
-          <div className="text-2xl font-extrabold text-cyan-600 dark:text-cyan-400 font-mono">125 / day</div>
-          <div className="text-[11px] text-muted-foreground font-medium">50 sent today (40% capacity)</div>
-        </Card>
-
-        <Card className="p-4 space-y-1">
-          <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Reputation Score</div>
-          <div className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">98.2%</div>
-          <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">0 spam complaints recorded</div>
-        </Card>
-
-        <Card className="p-4 space-y-1">
-          <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Sending Jitter</div>
-          <div className="text-2xl font-extrabold text-purple-600 dark:text-purple-400 font-mono">3 - 7 min</div>
-          <div className="text-[11px] text-muted-foreground font-medium">Simulating human cadence</div>
-        </Card>
-      </div>
-
-      {/* Connected Inboxes Cards */}
-      <div className="space-y-4">
-        <h3 className="text-xs font-extrabold text-foreground uppercase tracking-wider flex items-center gap-2">
-          <Mail className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-          <span>Active Inboxes in Rotation Pool ({accounts.length})</span>
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {accounts.map(acc => {
-            const usagePercent = Math.round((acc.sentToday / acc.dailyQuota) * 100);
-
-            return (
-              <Card
-                key={acc.id}
-                className="p-5 space-y-4 flex flex-col justify-between"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={acc.avatar}
-                        alt={acc.displayName}
-                        className="w-10 h-10 rounded-full object-cover border border-border shadow-2xs"
-                      />
-                      <div className="min-w-0">
-                        <div className="font-bold text-foreground text-xs truncate">{acc.displayName}</div>
-                        <div className="text-[11px] text-muted-foreground font-mono truncate font-medium">{acc.email}</div>
-                      </div>
+        <Card>
+          <ul className="divide-y divide-border">
+            {accounts.map(acc => {
+              const usagePercent = Math.round((acc.sentToday / acc.dailyQuota) * 100);
+              return (
+                <li key={acc.id} className="grid gap-5 p-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_minmax(0,0.9fr)] md:items-center">
+                  <div className="flex items-center gap-4">
+                    <img src={acc.avatar} alt="" className="h-12 w-12 rounded-full border border-border object-cover" />
+                    <div className="min-w-0">
+                      <p className="truncate text-base font-semibold text-foreground">{acc.displayName}</p>
+                      <p className="truncate font-mono text-sm text-muted-foreground" title={acc.email}>{acc.email}</p>
                     </div>
-
-                    <Badge variant="emerald" className="font-mono font-bold">
-                      {acc.healthScore}% Health
-                    </Badge>
                   </div>
 
-                  <div className="space-y-1.5 pt-2">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground font-medium">Daily Quota Utilization</span>
-                      <span className="font-mono text-foreground font-bold">
+                  <div className="space-y-2">
+                    <div className="flex items-baseline justify-between gap-3 text-sm">
+                      <span id={`quota-${acc.id}`} className="text-muted-foreground">
+                        Daily quota used
+                      </span>
+                      <span className="font-mono font-medium text-foreground">
                         {acc.sentToday} / {acc.dailyQuota} ({usagePercent}%)
                       </span>
                     </div>
-                    <div className="w-full bg-muted rounded-full h-2 overflow-hidden border border-border">
-                      <div
-                        className="bg-cyan-500 h-full rounded-full transition-all duration-500"
-                        style={{ width: `${usagePercent}%` }}
-                      />
+                    <div
+                      role="progressbar"
+                      aria-labelledby={`quota-${acc.id}`}
+                      aria-valuemin={0}
+                      aria-valuemax={acc.dailyQuota}
+                      aria-valuenow={acc.sentToday}
+                      aria-valuetext={`${acc.sentToday} of ${acc.dailyQuota} sent, ${usagePercent} percent`}
+                      className="h-2.5 w-full overflow-hidden rounded-full border border-border bg-muted"
+                    >
+                      <Bar percent={usagePercent} delay={0.2} className="h-full rounded-full bg-brand" />
                     </div>
                   </div>
-                </div>
 
-                <div className="pt-3 border-t border-border space-y-2 text-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground flex items-center gap-1.5 font-medium">
-                      <Flame className="w-3.5 h-3.5 text-amber-500" />
-                      <span>Warmup Status:</span>
-                    </span>
-                    <span className="text-amber-600 dark:text-amber-400 font-bold text-[11px]">{acc.warmupStage}</span>
+                  <div className="space-y-2 md:text-right">
+                    <Badge variant="emerald" className="font-mono">
+                      {acc.healthScore}% health
+                    </Badge>
+                    <p className="flex items-center gap-1.5 text-sm text-warning md:justify-end">
+                      <Flame className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      {acc.warmupStage}
+                    </p>
+                    <p className="font-mono text-xs text-muted-foreground">
+                      {acc.provider} &middot; since {acc.connectedSince}
+                    </p>
                   </div>
+                </li>
+              );
+            })}
+          </ul>
+        </Card>
+      </section>
 
-                  <div className="flex items-center justify-between text-[11px] text-muted-foreground font-mono">
-                    <span>Provider: {acc.provider}</span>
-                    <span>Connected: {acc.connectedSince}</span>
-                  </div>
+      <section aria-labelledby="rotation-heading" className="space-y-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-border pb-4">
+          <h2 id="rotation-heading" className="flex items-center gap-2 text-lg font-semibold text-foreground">
+            <RotateCw className="h-5 w-5 text-steel" aria-hidden="true" />
+            How rotation protects you
+          </h2>
+          <p className="text-sm text-muted-foreground">Three safeguards run on every send, in this order, with no configuration.</p>
+        </div>
+        <ol className="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
+          {rotationSteps.map((step, index) => {
+            const Icon = step.icon;
+            return (
+              <li key={step.title} className="flex gap-4 py-5 first:pt-0 md:px-6 md:py-0 md:first:pl-0 md:last:pr-0">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-muted font-mono text-sm font-semibold text-foreground">
+                  {index + 1}
+                </span>
+                <div className="min-w-0 space-y-1">
+                  <h3 className={`flex items-center gap-2 text-sm font-semibold ${step.color}`}>
+                    <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                    {step.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{step.body}</p>
                 </div>
-              </Card>
+              </li>
             );
           })}
-        </div>
-      </div>
-
-      {/* Rotation Logic Architecture Blueprint */}
-      <Card className="p-6 space-y-4">
-        <h4 className="text-xs font-extrabold text-foreground uppercase tracking-wider flex items-center gap-2">
-          <RotateCw className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-          <span>Intelligent Multi-Account Rotation Logic</span>
-        </h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-          <div className="p-4 rounded-xl bg-muted/40 border border-border space-y-1.5">
-            <div className="font-bold text-cyan-600 dark:text-cyan-400 flex items-center gap-1.5">
-              <Cpu className="w-3.5 h-3.5" />
-              <span>Round-Robin Load Balancing</span>
-            </div>
-            <p className="text-muted-foreground text-[11px] leading-relaxed">
-              Dispatches are distributed evenly across the inbox pool to prevent exceeding Google Workspace sending rate-limits.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-muted/40 border border-border space-y-1.5">
-            <div className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5" />
-              <span>Human Emulation Jitter</span>
-            </div>
-            <p className="text-muted-foreground text-[11px] leading-relaxed">
-              Randomized delays (180 to 420 seconds) between email dispatches mimic organic human executive sending patterns.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-muted/40 border border-border space-y-1.5">
-            <div className="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Automatic Cool-down Circuit</span>
-            </div>
-            <p className="text-muted-foreground text-[11px] leading-relaxed">
-              If an inbox receives an SPF/DKIM warning or temporary bounce, the router automatically pauses it for 24 hours.
-            </p>
-          </div>
-        </div>
-      </Card>
+        </ol>
+      </section>
     </div>
   );
 };

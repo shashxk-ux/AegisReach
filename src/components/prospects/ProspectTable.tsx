@@ -1,39 +1,56 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  Button, 
-  Badge, 
-  Input, 
-  Card, 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableHead, 
-  TableRow, 
-  TableCell 
+import { stepLabel } from '../layout/nav';
+import { AutoHeight } from '../ui/motion';
+import {
+  Button,
+  Badge,
+  Input,
+  Select,
+  Field,
+  Card,
+  PageHeader,
+  Dialog,
+  ChipGroup,
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
 } from '../ui';
-import { 
-  Search, 
-  Filter, 
-  CheckCircle, 
-  Coins, 
-  ExternalLink, 
-  Sparkles, 
-  ShieldAlert, 
-  Mail, 
-  Phone, 
-  Lock, 
+import {
+  Search,
+  Filter,
+  CheckCircle,
+  Coins,
+  ExternalLink,
+  Sparkles,
+  ShieldAlert,
+  Mail,
+  Phone,
+  Lock,
   ChevronRight,
   X,
-  UserX
+  UserX,
+  Building2,
+  Cpu,
+  SlidersHorizontal,
 } from 'lucide-react';
 
+const personaVariant = {
+  compliance: 'emerald',
+  soc_ops: 'cyan',
+  vulnerability_mgmt: 'amber',
+  technical: 'purple',
+} as const;
+
 export const ProspectTable: React.FC = () => {
-  const { 
-    prospects, 
-    unlockTier2, 
-    openDossier, 
-    setActiveTab, 
+  const {
+    prospects,
+    unlockTier2,
+    openDossier,
+    setActiveTab,
     setSelectedProspectId,
     searchQuery,
     setSearchQuery,
@@ -41,21 +58,38 @@ export const ProspectTable: React.FC = () => {
     setPersonaFilter,
     sourceFilter,
     setSourceFilter,
-    showToast
+    showToast,
   } = useApp();
 
-  const filteredProspects = prospects.filter(p => {
-    const matchesSearch = 
-      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.matchedVulnerability.cveId.toLowerCase().includes(searchQuery.toLowerCase());
+  const [icpOpen, setIcpOpen] = useState(false);
+  const [industryFilter, setIndustryFilter] = useState<string[]>([]);
+  const [techFilter, setTechFilter] = useState<string[]>([]);
 
+  const industryOptions = useMemo(() => Array.from(new Set(prospects.map(p => p.industry))).sort(), [prospects]);
+  const techOptions = useMemo(
+    () => Array.from(new Set(prospects.flatMap(p => p.techStack.map(t => t.name)))).sort(),
+    [prospects]
+  );
+  const toggleIn = (list: string[], setList: (v: string[]) => void, item: string) =>
+    setList(list.includes(item) ? list.filter(i => i !== item) : [...list, item]);
+
+  const query = searchQuery.toLowerCase();
+  const filteredProspects = prospects.filter(p => {
+    const matchesSearch =
+      p.name.toLowerCase().includes(query) ||
+      p.company.toLowerCase().includes(query) ||
+      p.title.toLowerCase().includes(query) ||
+      p.matchedVulnerability.cveId.toLowerCase().includes(query);
     const matchesPersona = personaFilter === 'all' || p.persona.type === personaFilter;
     const matchesSource = sourceFilter === 'all' || p.source === sourceFilter;
-
-    return matchesSearch && matchesPersona && matchesSource;
+    const matchesIndustry = industryFilter.length === 0 || industryFilter.includes(p.industry);
+    const matchesTech = techFilter.length === 0 || p.techStack.some(t => techFilter.includes(t.name));
+    return matchesSearch && matchesPersona && matchesSource && matchesIndustry && matchesTech;
   });
+
+  const icpFilterCount = industryFilter.length + techFilter.length;
+  const hasActiveFilters =
+    searchQuery !== '' || personaFilter !== 'all' || sourceFilter !== 'all' || icpFilterCount > 0;
 
   const handleReviewClick = (id: string) => {
     setSelectedProspectId(id);
@@ -70,296 +104,340 @@ export const ProspectTable: React.FC = () => {
     setSearchQuery('');
     setPersonaFilter('all');
     setSourceFilter('all');
+    setIndustryFilter([]);
+    setTechFilter([]);
   };
 
   return (
-    <div className="space-y-4">
-      {/* Top Banner & Quick Metrics */}
-      <Card className="p-5">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-lg font-extrabold text-foreground tracking-tight">
-                Sourced CISO Prospects
-              </h2>
-              <Badge variant="cyan" className="font-mono">
-                {filteredProspects.length} Available
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              2-Tier Verification: Cheap MX pass verified for all records. Spend ZoomInfo/Apollo credits only on selected targets.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2.5">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleBatchCheapPass}
-              className="text-xs font-semibold"
-            >
-              <CheckCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span>Run Cheap Pass ($0)</span>
+    <div className="space-y-8">
+      <PageHeader
+        eyebrow={stepLabel('prospects')}
+        title="Sourced CISO Prospects"
+        description="Every record passes a free MX check first. Spend ZoomInfo or Apollo credits only on the CISOs you decide to pursue."
+        actions={
+          <>
+            <Button variant="outline" onClick={handleBatchCheapPass}>
+              <CheckCircle className="h-4 w-4 text-success" aria-hidden="true" />
+              Run cheap pass ($0)
             </Button>
-            <Button
-              variant="cyan"
-              size="sm"
-              onClick={() => setActiveTab('icp')}
-              className="text-xs font-bold"
-            >
-              <Filter className="w-3.5 h-3.5" />
-              <span>Adjust ICP Filters</span>
-            </Button>
-          </div>
-        </div>
-      </Card>
-
-      {/* Search & Filter Toolbar */}
-      <Card className="p-3.5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2 flex-1 min-w-[260px]">
-            <div className="relative w-full max-w-md">
-              <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <Input
-                type="text"
-                aria-label="Search prospects"
-                placeholder="Search by CISO name, company, title, CVE..."
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                className="pl-9 pr-9 text-xs"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery('')}
-                  aria-label="Clear search query"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-0.5 rounded-full cursor-pointer"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
+            <Button variant="cyan" onClick={() => setIcpOpen(true)} aria-haspopup="dialog">
+              <Filter className="h-4 w-4" aria-hidden="true" />
+              Adjust ICP filters
+              {icpFilterCount > 0 && (
+                <span className="rounded-md bg-brand-foreground/15 px-1.5 font-mono text-xs">{icpFilterCount}</span>
               )}
-            </div>
-          </div>
+            </Button>
+          </>
+        }
+      />
 
-          <div className="flex items-center gap-3">
-            {/* Persona Filter */}
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span className="text-[11px] font-bold">Persona:</span>
-              <select
-                aria-label="Filter by Persona"
-                value={personaFilter}
-                onChange={e => setPersonaFilter(e.target.value)}
-                className="bg-card border border-input rounded-md px-2.5 py-1.5 text-xs text-foreground font-medium focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer"
+      <section aria-label="Search and filters" className="flex flex-wrap items-end gap-4">
+        <Field label="Search prospects" htmlFor="prospect-search" className="min-w-[16rem] flex-1 md:max-w-md">
+          <div className="relative">
+            <Search
+              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              id="prospect-search"
+              type="search"
+              placeholder="Name, company, title or CVE"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="pl-10 pr-10"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+                className="absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
               >
-                <option value="all">All Personas</option>
-                <option value="compliance">Compliance-Oriented</option>
-                <option value="soc_ops">SOC / Ops-Oriented</option>
-                <option value="vulnerability_mgmt">Vulnerability Mgmt</option>
-                <option value="technical">Technical / Architecture</option>
-              </select>
-            </div>
-
-            {/* Sourcing Channel Filter */}
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span className="text-[11px] font-bold">Source:</span>
-              <select
-                aria-label="Filter by Sourcing Channel"
-                value={sourceFilter}
-                onChange={e => setSourceFilter(e.target.value)}
-                className="bg-card border border-input rounded-md px-2.5 py-1.5 text-xs text-foreground font-medium focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer"
-              >
-                <option value="all">All Sources</option>
-                <option value="ZoomInfo">ZoomInfo</option>
-                <option value="Apollo">Apollo</option>
-                <option value="Trivly">Trivly Scraper</option>
-                <option value="CSV Upload">CSV Upload</option>
-                <option value="XLS Import">XLS Import</option>
-              </select>
-            </div>
+                <X className="h-4 w-4" aria-hidden="true" />
+              </button>
+            )}
           </div>
-        </div>
-      </Card>
+        </Field>
 
-      {/* Main Data Table or Empty State */}
+        <Field label="Persona" htmlFor="prospect-persona" className="w-full sm:w-56">
+          <Select id="prospect-persona" value={personaFilter} onChange={e => setPersonaFilter(e.target.value)}>
+            <option value="all">All personas</option>
+            <option value="compliance">Compliance-oriented</option>
+            <option value="soc_ops">SOC / Ops-oriented</option>
+            <option value="vulnerability_mgmt">Vulnerability management</option>
+            <option value="technical">Technical / architecture</option>
+          </Select>
+        </Field>
+
+        <Field label="Source" htmlFor="prospect-source" className="w-full sm:w-48">
+          <Select id="prospect-source" value={sourceFilter} onChange={e => setSourceFilter(e.target.value)}>
+            <option value="all">All sources</option>
+            <option value="ZoomInfo">ZoomInfo</option>
+            <option value="Apollo">Apollo</option>
+            <option value="Trivly">Trivly scraper</option>
+            <option value="CSV Upload">CSV upload</option>
+            <option value="XLS Import">XLS import</option>
+          </Select>
+        </Field>
+
+        {hasActiveFilters && (
+          <Button variant="ghost" onClick={handleClearFilters} className="text-muted-foreground">
+            Reset filters
+          </Button>
+        )}
+      </section>
+
+      <p role="status" aria-live="polite" className="-mt-4 text-sm text-muted-foreground">
+        Showing <span className="font-mono font-medium text-foreground">{filteredProspects.length}</span> of{' '}
+        <span className="font-mono">{prospects.length}</span> prospects
+      </p>
+
       {filteredProspects.length === 0 ? (
-        <Card className="p-12 text-center space-y-3">
-          <div className="w-12 h-12 mx-auto rounded-2xl bg-muted flex items-center justify-center text-muted-foreground">
-            <UserX className="w-6 h-6" />
+        <Card className="space-y-4 p-12 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+            <UserX className="h-6 w-6" aria-hidden="true" />
           </div>
-          <h3 className="text-base font-bold text-foreground">No Prospects Matched</h3>
-          <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-            No CISOs match your search criteria. Try modifying your search query or reset your filters.
+          <h2 className="text-lg font-semibold text-foreground">No prospects match</h2>
+          <p className="mx-auto max-w-sm text-sm text-muted-foreground">
+            Nothing fits the current search and filters. Loosen them, or reset to see all {prospects.length} prospects.
           </p>
-          <Button
-            variant="cyan"
-            size="sm"
-            onClick={handleClearFilters}
-          >
-            Reset All Filters
+          <Button variant="cyan" onClick={handleClearFilters}>
+            Reset all filters
           </Button>
         </Card>
       ) : (
         <Card className="overflow-hidden">
-          <Table>
+          <AutoHeight>
+          <Table label="Sourced CISO prospects" className="min-w-[64rem]">
             <TableHeader>
               <TableRow>
-                <TableHead>CISO & Organization</TableHead>
-                <TableHead>Persona Strategy</TableHead>
-                <TableHead>Tech Stack & CVE Hook</TableHead>
-                <TableHead>Tier-1 Cheap Pass</TableHead>
-                <TableHead>Tier-2 Direct Contact</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="min-w-[17rem]">CISO &amp; organization</TableHead>
+                <TableHead className="min-w-[11rem]">Persona strategy</TableHead>
+                <TableHead className="min-w-[13rem]">Tech stack &amp; CVE hook</TableHead>
+                <TableHead className="min-w-[14rem]">Direct contact</TableHead>
+                <TableHead className="min-w-[10rem] text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredProspects.map(prospect => {
-                const badgeVariant = 
-                  prospect.persona.type === 'compliance'
-                    ? 'emerald'
-                    : prospect.persona.type === 'soc_ops'
-                    ? 'cyan'
-                    : prospect.persona.type === 'vulnerability_mgmt'
-                    ? 'amber'
-                    : 'purple';
-
-                return (
-                  <TableRow 
-                    key={prospect.id} 
-                    className="cursor-pointer group"
-                    onClick={() => openDossier(prospect.id)}
-                  >
-                    {/* CISO & Company */}
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <div className="relative shrink-0">
-                          <img
-                            src={prospect.avatar}
-                            alt={prospect.name}
-                            className="w-10 h-10 rounded-full object-cover border border-border shadow-2xs"
-                          />
-                          <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-card" />
-                        </div>
-                        <div className="min-w-0">
-                          <div className="font-bold text-foreground flex items-center gap-1.5">
-                            <span>{prospect.name}</span>
-                            <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                              {prospect.source}
-                            </Badge>
-                          </div>
-                          <p className="text-[11px] text-muted-foreground truncate">{prospect.title}</p>
-                          <p className="text-[11px] text-cyan-600 dark:text-cyan-400 font-semibold truncate mt-0.5">{prospect.company}</p>
-                        </div>
+              {filteredProspects.map(prospect => (
+                <TableRow key={prospect.id} className="group">
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <div className="relative shrink-0">
+                        <img
+                          src={prospect.avatar}
+                          alt=""
+                          className="h-11 w-11 rounded-full border border-border object-cover"
+                        />
+                        <span
+                          className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-card bg-success"
+                          aria-hidden="true"
+                        />
                       </div>
-                    </TableCell>
-
-                    {/* Persona Strategy */}
-                    <TableCell>
-                      <div className="space-y-1">
-                        <Badge variant={badgeVariant} className="gap-1 text-[11px]">
-                          <Sparkles className="w-3 h-3" />
-                          <span>{prospect.persona.label}</span>
-                        </Badge>
-                        <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                          <span>Confidence:</span>
-                          <span className="font-mono text-foreground font-bold">{prospect.persona.confidence}%</span>
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => openDossier(prospect.id)}
+                            className="rounded-md text-left text-sm font-semibold text-foreground underline-offset-4 hover:text-brand hover:underline"
+                          >
+                            {prospect.name}
+                          </button>
+                          <Badge variant="secondary">{prospect.source}</Badge>
                         </div>
+                        <p className="text-sm text-muted-foreground">{prospect.title}</p>
+                        <p className="text-sm font-medium text-brand">{prospect.company}</p>
                       </div>
-                    </TableCell>
+                    </div>
+                  </TableCell>
 
-                    {/* Tech Stack & CVE Hook */}
-                    <TableCell className="max-w-xs">
+                  <TableCell>
+                    <div className="space-y-1.5">
+                      <Badge variant={personaVariant[prospect.persona.type as keyof typeof personaVariant] ?? 'purple'}>
+                        <Sparkles className="h-3 w-3" aria-hidden="true" />
+                        {prospect.persona.label}
+                      </Badge>
+                      <p className="text-xs text-muted-foreground">
+                        Confidence{' '}
+                        <span className="font-mono font-semibold text-foreground">{prospect.persona.confidence}%</span>
+                      </p>
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="max-w-xs">
+                    <div className="space-y-2">
+                      <ul className="flex flex-wrap gap-1.5" aria-label="Detected tech stack">
+                        {prospect.techStack.slice(0, 2).map(tech => (
+                          <li
+                            key={tech.name}
+                            className="rounded-md border border-border bg-muted px-2 py-0.5 font-mono text-xs text-foreground"
+                          >
+                            {tech.name}
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="inline-flex items-center gap-1.5 rounded-md border border-danger/30 bg-danger/10 px-2 py-0.5 text-xs font-medium text-danger">
+                        <ShieldAlert className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                        <span className="font-mono">{prospect.matchedVulnerability.cveId}</span>
+                        <span className="font-mono">CVSS {prospect.matchedVulnerability.cvss}</span>
+                      </p>
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="max-w-[15rem]">
+                    {prospect.tier2Enriched.unlocked ? (
+                      <div className="min-w-0 space-y-1.5 text-sm">
+                        <p className="flex min-w-0 items-center gap-2 font-mono text-foreground">
+                          <Mail className="h-3.5 w-3.5 shrink-0 text-brand" aria-hidden="true" />
+                          <span className="truncate" title={prospect.tier2Enriched.workEmail}>
+                            {prospect.tier2Enriched.workEmail}
+                          </span>
+                        </p>
+                        <p className="flex items-center gap-2 font-mono text-muted-foreground">
+                          <Phone className="h-3.5 w-3.5 shrink-0 text-success" aria-hidden="true" />
+                          <span>{prospect.tier2Enriched.directPhone}</span>
+                        </p>
+                      </div>
+                    ) : (
                       <div className="space-y-1.5">
-                        <div className="flex flex-wrap gap-1">
-                          {prospect.techStack.slice(0, 2).map((tech, idx) => (
-                            <span
-                              key={idx}
-                              className="text-[10px] px-1.5 py-0.5 rounded bg-muted border border-border text-foreground font-mono font-medium"
-                            >
-                              {tech.name}
-                            </span>
-                          ))}
-                        </div>
-                        <div className="inline-flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-300 font-semibold">
-                          <ShieldAlert className="w-3 h-3 text-red-600 dark:text-red-400 shrink-0" />
-                          <span className="font-mono">{prospect.matchedVulnerability.cveId}</span>
-                          <span className="text-[10px] font-bold text-red-600 dark:text-red-400">CVSS {prospect.matchedVulnerability.cvss}</span>
-                        </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => unlockTier2(prospect.id)}
+                        aria-label={`Unlock contact details for ${prospect.name}, costs 1 credit`}
+                        className="gap-2 border-warning/40 text-warning hover:bg-warning/10"
+                      >
+                        <Lock className="h-3.5 w-3.5 group-hover:hidden" aria-hidden="true" />
+                        <Coins className="hidden h-3.5 w-3.5 group-hover:inline" aria-hidden="true" />
+                        Unlock (1 credit)
+                      </Button>
+                      <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <CheckCircle className="h-3.5 w-3.5 text-success" aria-hidden="true" />
+                        MX verified &middot; $0
+                      </p>
                       </div>
-                    </TableCell>
+                    )}
+                  </TableCell>
 
-                    {/* Tier-1 Cheap Pass */}
-                    <TableCell>
-                      <div className="space-y-1">
-                        <Badge variant="emerald" className="gap-1 text-[10px]">
-                          <CheckCircle className="w-3 h-3" />
-                          <span>Cheap Pass Active</span>
-                        </Badge>
-                        <div className="text-[10px] text-muted-foreground flex items-center gap-1.5 font-medium">
-                          <span>MX Valid</span>
-                          <span>•</span>
-                          <span className="text-emerald-600 dark:text-emerald-400 font-semibold">$0 Cost</span>
-                        </div>
-                      </div>
-                    </TableCell>
-
-                    {/* Tier-2 Contact Unlock */}
-                    <TableCell onClick={e => e.stopPropagation()}>
-                      {prospect.tier2Enriched.unlocked ? (
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-1.5 text-foreground text-xs font-mono font-medium">
-                            <Mail className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
-                            <span className="truncate max-w-[150px]">{prospect.tier2Enriched.workEmail}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 text-muted-foreground text-[11px] font-mono">
-                            <Phone className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                            <span>{prospect.tier2Enriched.directPhone}</span>
-                          </div>
-                        </div>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => unlockTier2(prospect.id)}
-                          className="text-amber-700 dark:text-amber-300 border-amber-500/30 hover:bg-amber-500/10 hover:border-amber-500/50 text-xs font-bold gap-1.5 group/btn"
-                        >
-                          <Lock className="w-3 h-3 text-amber-600 dark:text-amber-400 group-hover/btn:hidden" />
-                          <Coins className="w-3 h-3 text-amber-600 dark:text-amber-400 hidden group-hover/btn:inline" />
-                          <span>Unlock (1 Credit)</span>
-                        </Button>
-                      )}
-                    </TableCell>
-
-                    {/* Actions */}
-                    <TableCell className="text-right" onClick={e => e.stopPropagation()}>
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => openDossier(prospect.id)}
-                          aria-label="Open AI Research Dossier"
-                          title="Open AI Research Dossier"
-                          className="h-8 w-8 text-muted-foreground hover:text-cyan-600 dark:hover:text-cyan-300"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </Button>
-                        <Button
-                          variant="cyan"
-                          size="sm"
-                          onClick={() => handleReviewClick(prospect.id)}
-                          className="h-8 text-xs font-bold gap-1 px-3"
-                        >
-                          <span>Review</span>
-                          <ChevronRight className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => openDossier(prospect.id)}
+                        aria-label={`Open research dossier for ${prospect.name}`}
+                        title="Open research dossier"
+                      >
+                        <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                      </Button>
+                      <Button
+                        variant="cyan"
+                        size="sm"
+                        onClick={() => handleReviewClick(prospect.id)}
+                        aria-label={`Review outreach draft for ${prospect.name}`}
+                      >
+                        Review
+                        <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
+          </AutoHeight>
         </Card>
       )}
+
+      <Dialog open={icpOpen} onClose={() => setIcpOpen(false)} label="Adjust ICP filters" variant="modal" className="max-w-2xl">
+        <div className="flex max-h-[90dvh] flex-col">
+          <div className="flex shrink-0 items-start justify-between gap-4 border-b border-border p-6">
+            <div className="space-y-1">
+              <h2 className="flex items-center gap-2 text-xl font-semibold tracking-tight text-foreground">
+                <SlidersHorizontal className="h-5 w-5 text-brand" aria-hidden="true" />
+                Adjust ICP filters
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Narrow the pipeline by industry and perimeter technology. The list behind this window updates as you choose.
+              </p>
+            </div>
+            <Button variant="ghost" size="icon" onClick={() => setIcpOpen(false)} aria-label="Close filters" className="shrink-0">
+              <X className="h-5 w-5" aria-hidden="true" />
+            </Button>
+          </div>
+
+          <div className="flex-1 divide-y divide-border overflow-y-auto">
+            <ChipGroup
+              id="pf-industries"
+              className="space-y-4 p-6"
+              title="Industry"
+              icon={Building2}
+              iconClass="text-brand"
+              items={industryOptions}
+              selected={industryFilter}
+              onToggle={item => toggleIn(industryFilter, setIndustryFilter, item)}
+              onSelectAll={() => setIndustryFilter([...industryOptions])}
+              onClear={() => setIndustryFilter([])}
+              searching={false}
+            />
+            <ChipGroup
+              id="pf-techs"
+              className="space-y-4 p-6"
+              title="Perimeter technology"
+              icon={Cpu}
+              iconClass="text-steel"
+              description="Show CISOs whose company runs any of the selected technologies."
+              items={techOptions}
+              selected={techFilter}
+              onToggle={item => toggleIn(techFilter, setTechFilter, item)}
+              onSelectAll={() => setTechFilter([...techOptions])}
+              onClear={() => setTechFilter([])}
+              searching={false}
+            />
+          </div>
+
+          <p
+            role="status"
+            className={`shrink-0 border-t border-border px-6 py-3 text-sm ${
+              filteredProspects.length === 0 && icpFilterCount > 0 ? 'font-medium text-warning' : 'text-muted-foreground'
+            }`}
+          >
+            {icpFilterCount === 0
+              ? `${prospects.length} prospects in the pipeline. Choose filters to narrow them down.`
+              : filteredProspects.length === 0
+                ? 'No prospects match this combination. Filters across groups combine, so try removing one.'
+                : `${filteredProspects.length} of ${prospects.length} prospects match your filters.`}
+          </p>
+
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-border p-5">
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setIndustryFilter([]);
+                  setTechFilter([]);
+                }}
+                disabled={icpFilterCount === 0}
+                className="text-muted-foreground"
+              >
+                Reset
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIcpOpen(false);
+                  setActiveTab('icp');
+                }}
+              >
+                Open full ICP Studio
+              </Button>
+            </div>
+            <Button variant="cyan" onClick={() => setIcpOpen(false)}>
+              Show {filteredProspects.length} {filteredProspects.length === 1 ? 'prospect' : 'prospects'}
+            </Button>
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 };

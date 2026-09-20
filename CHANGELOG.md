@@ -6,6 +6,59 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.5.0] - 2026-09-21
+
+Full interface redesign focused on accessibility (WCAG 2.2 AA), a calmer visual system, and consistent motion. Automated axe-core checks report zero violations across all six screens, the ICP spreadsheet and presets tabs, the dossier drawer, the filters popup and the command palette, in both light and dark themes.
+
+### Added
+- **Command palette** (`Ctrl/Cmd + K`): jump to any screen, switch Observer/Autopilot mode or change theme. Built as an ARIA combobox with arrow-key navigation and a live result count.
+- **Mobile navigation drawer** with focus trap, replacing the squeezed sidebar on phones. The Observer/Autopilot switch stays visible on every width because it controls whether emails auto-send.
+- **ICP filters popup** on the Prospect Pipeline: "Adjust ICP filters" now opens a dialog over the pipeline (filter by industry and perimeter technology, live result count, active-filter badge) instead of navigating away. "Open full ICP Studio" is still one click away.
+- **Confirmation step before "Approve & dispatch"**, since sending outreach cannot be undone.
+- **Toast countdown bar**: each notification shows a shrinking timer, and hovering or focusing it pauses the countdown.
+- **Skip link**, one `h1` per screen, per-screen document titles, and focus moves to the new page heading on navigation.
+- **Workflow-ordered navigation**: screens are numbered Step 1 to 6, and every page opens with the same header (step, title, description).
+- **Motion** (`motion` v13) with one shared spring vocabulary:
+  - Staggered page entrances; sliding highlights for the mode switch, sidebar, ICP tabs and persona list.
+  - Springy press and hover on buttons; animated dialogs, drawer and toasts; counting numbers; filling progress bars.
+  - Filter chips bloom with a fill and check icon; areas whose text grows or shrinks (forecast panel, form messages, palette results, tables, persona detail, suppression list) ease to their new height.
+- New shared UI primitives: `PageHeader`, `Dialog` (native `<dialog>`), `Field`, `Select`, `Textarea`, `ChipGroup`, `AutoHeight`, `FadeSwap`, `Collapse`, `AnimatedNumber`, `Bar`.
+
+### Changed
+- **Design system**: neutral zinc surfaces (no navy tint), a single desaturated cyan accent, Geist and Geist Mono type, tinted diffusion shadows in place of glows, and flat tinted badges. Purple is retired as a brand hue.
+- **Theming rebuilt on semantic tokens**: removed roughly 700 lines of `!important` light/dark override CSS. Status colors are now `success`, `warning`, `danger`, `brand` and `steel` tokens that adapt per theme, and every text and background pair is contrast-verified (body and muted text at least 7:1, status text at least 4.5:1, form-field borders at least 3:1).
+- **Screens rebuilt**: Personas is now a list beside a detail panel; Telemetry has a real proportional funnel; Warmup is a list with a horizontal, divider-separated rotation summary; the ICP Studio has real tabs, reusable chip groups and a sticky forecast rail.
+- **Prospect table**: the redundant "Tier-1 cheap pass" column was folded into the contact column, columns have minimum widths so the table scrolls sideways instead of squeezing, and long emails and names truncate with the full value on hover.
+- **Dropdowns** use a custom chevron with proper right-hand padding.
+- **Layout**: the page now scrolls naturally instead of using a nested scroll container.
+- **Toasts** last 10 seconds (was 4.5) and are announced to screen readers through a live region.
+- The theme now defaults to the system preference, applied before first paint to avoid a flash.
+- Dark mode: layered elevation with clearly visible borders and hover states.
+
+### Fixed
+- Dialog styling: a global `dialog` reset overrode Tailwind classes, leaving the drawer full-width with no background and the command palette with no fill.
+- Light-theme contrast failures (7 to 14 per screen) caused by hardcoded colors patched with overrides.
+- The active navigation item was hard to see in light mode; it is now a raised, bordered card with an accent bar.
+- `Badge` rendered a `<div>` inside `<p>` elements (invalid HTML); it is now a `<span>`.
+- Unlabeled form controls, invalid definition-list markup in the dossier drawer, and a scroll area that keyboard users could not reach.
+- Dialogs could stay open if their exit animation stalled in a background tab; closing no longer depends on the animation finishing.
+
+### Removed
+- "XLS Import" and "CSV Importer" from the ICP sourcing adapters, since the Spreadsheet import tab already handles `.xls`, `.xlsx` and `.csv`.
+- The `users.drafts.create` API label on the Observer Review screen; it meant nothing to end users.
+- Decorative gradients, neon glows and emoji glyphs in the interface.
+
+### Accessibility
+- Native `<dialog>` for every overlay (focus trap, Escape to close, inert background, focus return).
+- Visible 3px focus ring, minimum 12px text, 44px touch targets on coarse pointers, and status conveyed by text and icons as well as color.
+- Support for `prefers-reduced-motion`, `prefers-contrast: more` and Windows forced-colors mode.
+- Animations stop after about 5 seconds (WCAG 2.2.2); the toast countdown is exempt because it conveys elapsed time.
+
+### Dependencies
+- Added `motion` (^13.4.0).
+
+---
+
 ## [2.4.0] - 2026-09-13
 
 ### 🎨 Design System & UI Architecture (shadcn/ui + Slate / Cyan)

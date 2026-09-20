@@ -53,10 +53,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     try {
       const saved = localStorage.getItem('aegisreach_theme');
-      return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+      if (saved === 'light' || saved === 'dark') return saved;
     } catch {
-      return 'dark';
+      /* storage unavailable: fall through to the system preference */
     }
+    return window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   });
 
   React.useEffect(() => {
@@ -91,9 +92,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const showToast = (type: 'success' | 'info' | 'warning', title: string, description: string) => {
     const id = Math.random().toString(36).substring(2, 9);
     setToasts(prev => [...prev, { id, type, title, description }]);
-    setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
-    }, 4500);
   };
 
   const toggleTheme = () => {

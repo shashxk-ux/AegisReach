@@ -3,4 +3,7 @@ export * from "./card";
 export * from "./badge";
 export * from "./input";
 export * from "./table";
+export * from "./dialog";
+export * from "./page-header";
 export * from "./ToastContainer";
+export * from "./chip-group";

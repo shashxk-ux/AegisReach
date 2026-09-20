@@ -1,173 +1,129 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { Button, Badge, Card } from '../ui';
-import { 
-  X, 
-  ShieldAlert, 
-  Sparkles, 
-  Mail, 
-  Phone, 
-  Coins, 
-  Cpu, 
-  Award, 
-  FileText, 
-  Radio, 
+import { Button, Badge, Card, Dialog } from '../ui';
+import {
+  X,
+  ShieldAlert,
+  Sparkles,
+  Mail,
+  Phone,
+  Coins,
+  Cpu,
+  Award,
+  FileText,
+  Radio,
   ArrowRight,
-  Lock
+  Lock,
 } from 'lucide-react';
 
-export const ProspectDrawer: React.FC = () => {
-  const { 
-    isDrawerOpen, 
-    closeDossier, 
-    selectedProspect, 
-    unlockTier2, 
-    setActiveTab, 
-    setSelectedProspectId 
-  } = useApp();
+const personaVariant = {
+  compliance: 'emerald',
+  soc_ops: 'cyan',
+  vulnerability_mgmt: 'amber',
+  technical: 'purple',
+} as const;
 
-  if (!isDrawerOpen || !selectedProspect) return null;
+export const ProspectDrawer: React.FC = () => {
+  const { isDrawerOpen, closeDossier, selectedProspect, unlockTier2, setActiveTab, setSelectedProspectId } = useApp();
 
   const handleReviewClick = () => {
+    if (!selectedProspect) return;
     setSelectedProspectId(selectedProspect.id);
     closeDossier();
     setActiveTab('review');
   };
 
-  const personaBadgeVariant = 
-    selectedProspect.persona.type === 'compliance'
-      ? 'emerald'
-      : selectedProspect.persona.type === 'soc_ops'
-      ? 'cyan'
-      : selectedProspect.persona.type === 'vulnerability_mgmt'
-      ? 'amber'
-      : 'purple';
+  const open = isDrawerOpen && !!selectedProspect;
+  const p = selectedProspect;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Backdrop */}
-      <div 
-        onClick={closeDossier}
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in"
-      />
-
-      <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-2xl bg-card border-l border-border shadow-2xl flex flex-col justify-between overflow-y-auto">
-          {/* Header */}
-          <div className="p-6 border-b border-border bg-card/90 sticky top-0 z-10 backdrop-blur-md flex items-start justify-between">
+    <Dialog open={open} onClose={closeDossier} label={p ? `Research dossier for ${p.name}` : 'Research dossier'} variant="drawer">
+      {p && (
+        <div className="flex h-full flex-col">
+          <div className="flex shrink-0 items-start justify-between gap-4 border-b border-border p-6">
             <div className="flex items-center gap-4">
-              <img
-                src={selectedProspect.avatar}
-                alt={selectedProspect.name}
-                className="w-16 h-16 rounded-2xl object-cover border-2 border-border shadow-md"
-              />
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xl font-bold text-foreground tracking-tight">{selectedProspect.name}</h3>
-                  <Badge variant="secondary">
-                    {selectedProspect.source}
-                  </Badge>
+              <img src={p.avatar} alt="" className="h-16 w-16 rounded-2xl border border-border object-cover" />
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-xl font-semibold tracking-tight text-foreground">{p.name}</h2>
+                  <Badge variant="secondary">{p.source}</Badge>
                 </div>
-                <p className="text-xs text-muted-foreground mt-0.5">{selectedProspect.title}</p>
-                <div className="flex items-center gap-2 mt-1 text-xs text-cyan-600 dark:text-cyan-400 font-semibold">
-                  <span>{selectedProspect.company}</span>
-                  <span className="text-muted-foreground">•</span>
-                  <span className="text-muted-foreground font-normal">{selectedProspect.location}</span>
-                  <span className="text-muted-foreground">•</span>
-                  <span className="text-muted-foreground font-normal">{selectedProspect.companySize}</span>
-                </div>
+                <p className="mt-0.5 text-sm text-muted-foreground">{p.title}</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  <span className="font-medium text-brand">{p.company}</span> &middot; {p.location} &middot; {p.companySize}
+                </p>
               </div>
             </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={closeDossier}
-              aria-label="Close dossier"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <X className="w-5 h-5" />
+            <Button variant="ghost" size="icon" onClick={closeDossier} aria-label="Close dossier" className="shrink-0">
+              <X className="h-5 w-5" aria-hidden="true" />
             </Button>
           </div>
 
-          {/* Body Content */}
-          <div className="p-6 space-y-6 flex-1">
-            {/* 2-Tier Enrichment Banner */}
-            <Card className="p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-foreground uppercase tracking-wider">
-                  Contact Enrichment State
-                </span>
+          <div
+            role="region"
+            aria-label="Dossier details"
+            tabIndex={0}
+            className="flex-1 space-y-8 overflow-y-auto p-6"
+          >
+            <Card className="space-y-4 p-5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="text-sm font-semibold text-foreground">Contact enrichment</h3>
                 <Badge variant="emerald" className="font-mono">
-                  Tier-1 Cheap Pass ($0) Active
+                  Tier-1 cheap pass ($0) active
                 </Badge>
               </div>
 
-              {selectedProspect.tier2Enriched.unlocked ? (
-                <div className="grid grid-cols-2 gap-3 pt-1">
-                  <div className="p-3 rounded-xl bg-muted/40 border border-border flex items-center gap-3">
-                    <Mail className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
-                    <div className="min-w-0">
-                      <div className="text-[10px] text-muted-foreground font-medium">Verified Direct Email</div>
-                      <div className="text-xs font-mono text-foreground truncate font-semibold">{selectedProspect.tier2Enriched.workEmail}</div>
-                    </div>
+              {p.tier2Enriched.unlocked ? (
+                <dl className="grid gap-3 sm:grid-cols-2">
+                  <div className="min-w-0 space-y-1 rounded-xl border border-border bg-muted/50 p-3">
+                    <dt className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Mail className="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+                      Verified direct email
+                    </dt>
+                    <dd className="truncate font-mono text-sm font-medium text-foreground" title={p.tier2Enriched.workEmail}>
+                      {p.tier2Enriched.workEmail}
+                    </dd>
                   </div>
-                  <div className="p-3 rounded-xl bg-muted/40 border border-border flex items-center gap-3">
-                    <Phone className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <div className="min-w-0">
-                      <div className="text-[10px] text-muted-foreground font-medium">Direct Phone Line</div>
-                      <div className="text-xs font-mono text-foreground truncate font-semibold">{selectedProspect.tier2Enriched.directPhone}</div>
-                    </div>
+                  <div className="min-w-0 space-y-1 rounded-xl border border-border bg-muted/50 p-3">
+                    <dt className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Phone className="h-4 w-4 shrink-0 text-success" aria-hidden="true" />
+                      Direct phone line
+                    </dt>
+                    <dd className="font-mono text-sm font-medium text-foreground">{p.tier2Enriched.directPhone}</dd>
                   </div>
-                </div>
+                </dl>
               ) : (
-                <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
-                  <div className="flex items-center gap-2.5">
-                    <Lock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                    <p className="text-xs text-foreground">
-                      Direct work email and phone locked. Syntax & MX records verified.
-                    </p>
-                  </div>
-                  <Button
-                    variant="cyan"
-                    size="sm"
-                    onClick={() => unlockTier2(selectedProspect.id)}
-                    className="gap-1.5 shrink-0"
-                  >
-                    <Coins className="w-3.5 h-3.5" />
-                    <span>Unlock (1 Credit)</span>
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-warning/30 bg-warning/10 p-3.5">
+                  <p className="flex items-center gap-2.5 text-sm text-foreground">
+                    <Lock className="h-4 w-4 shrink-0 text-warning" aria-hidden="true" />
+                    Direct email and phone are locked. Syntax and MX records are verified.
+                  </p>
+                  <Button variant="cyan" size="sm" onClick={() => unlockTier2(p.id)}>
+                    <Coins className="h-4 w-4" aria-hidden="true" />
+                    Unlock (1 credit)
                   </Button>
                 </div>
               )}
             </Card>
 
-            {/* Persona Classification Card */}
-            <Card className="p-5 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-                  <span className="text-xs font-bold uppercase tracking-wider text-foreground">
-                    AI Persona Classification
-                  </span>
-                </div>
-                <Badge variant={personaBadgeVariant} className="font-mono">
-                  {selectedProspect.persona.confidence}% Confidence
+            <Card className="space-y-4 p-5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                  <Sparkles className="h-4 w-4 text-brand" aria-hidden="true" />
+                  AI persona classification
+                </h3>
+                <Badge variant={personaVariant[p.persona.type as keyof typeof personaVariant] ?? 'purple'} className="font-mono">
+                  {p.persona.confidence}% confidence
                 </Badge>
               </div>
-
-              <h4 className="text-lg font-bold tracking-tight text-foreground">
-                {selectedProspect.persona.label}
-              </h4>
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                {selectedProspect.persona.rationale}
-              </p>
-
-              <div className="pt-2 border-t border-border space-y-1.5">
-                <div className="text-[11px] font-bold text-foreground">Trigger Signals Detected:</div>
-                <ul className="space-y-1">
-                  {selectedProspect.persona.triggerSignals.map((signal, idx) => (
-                    <li key={idx} className="text-xs flex items-start gap-2 text-muted-foreground">
-                      <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 bg-cyan-500" />
+              <p className="text-lg font-semibold tracking-tight text-foreground">{p.persona.label}</p>
+              <p className="text-sm leading-relaxed text-muted-foreground">{p.persona.rationale}</p>
+              <div className="space-y-2 border-t border-border pt-4">
+                <h4 className="text-sm font-medium text-foreground">Trigger signals detected</h4>
+                <ul className="space-y-1.5">
+                  {p.persona.triggerSignals.map(signal => (
+                    <li key={signal} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" aria-hidden="true" />
                       <span>{signal}</span>
                     </li>
                   ))}
@@ -175,105 +131,89 @@ export const ProspectDrawer: React.FC = () => {
               </div>
             </Card>
 
-            {/* Detected Tech Stack */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                <Cpu className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-                <span>Detected Company Tech Stack ({selectedProspect.techStack.length})</span>
-              </h4>
-              <div className="grid grid-cols-2 gap-2.5">
-                {selectedProspect.techStack.map((tech, idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-card border border-border flex flex-col justify-between shadow-2xs">
-                    <span className="text-xs font-bold text-foreground">{tech.name}</span>
-                    <div className="flex items-center justify-between text-[10px] text-muted-foreground mt-1.5">
-                      <span className="font-medium">{tech.category}</span>
-                      <span className="font-mono text-cyan-600 dark:text-cyan-400 font-semibold">{tech.detectedVia}</span>
-                    </div>
-                  </div>
+            <section className="space-y-3" aria-labelledby="dossier-stack">
+              <h3 id="dossier-stack" className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Cpu className="h-4 w-4 text-brand" aria-hidden="true" />
+                Detected tech stack ({p.techStack.length})
+              </h3>
+              <ul className="grid gap-2.5 sm:grid-cols-2">
+                {p.techStack.map(tech => (
+                  <li key={tech.name} className="rounded-xl border border-border bg-card p-3">
+                    <p className="text-sm font-medium text-foreground">{tech.name}</p>
+                    <p className="mt-1 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                      <span>{tech.category}</span>
+                      <span className="font-mono font-medium text-brand">{tech.detectedVia}</span>
+                    </p>
+                  </li>
                 ))}
-              </div>
-            </div>
+              </ul>
+            </section>
 
-            {/* Threat Intelligence & Correlated CVE Card */}
-            <div className="p-5 rounded-2xl bg-red-500/5 dark:bg-red-950/20 border border-red-500/20 space-y-3.5 shadow-2xs">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
-                  <ShieldAlert className="w-4 h-4" />
-                  <span className="text-xs font-bold uppercase tracking-wider">Matched Threat Advisory</span>
-                </div>
-                <Badge variant="outline" className="text-[10px] font-mono border-red-500/30 text-red-600 dark:text-red-400 font-bold">
-                  {selectedProspect.matchedVulnerability.advisorySource}
+            <section
+              aria-labelledby="dossier-threat"
+              className="space-y-4 rounded-2xl border border-danger/30 bg-danger/5 p-5"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 id="dossier-threat" className="flex items-center gap-2 text-sm font-semibold text-danger">
+                  <ShieldAlert className="h-4 w-4" aria-hidden="true" />
+                  Matched threat advisory
+                </h3>
+                <Badge variant="outline" className="border-danger/40 font-mono text-danger">
+                  {p.matchedVulnerability.advisorySource}
                 </Badge>
               </div>
-
-              <div className="flex items-baseline justify-between">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h5 className="text-base font-bold text-foreground font-mono">{selectedProspect.matchedVulnerability.cveId}</h5>
-                  <p className="text-xs text-red-600 dark:text-red-400 font-medium">{selectedProspect.matchedVulnerability.name}</p>
+                  <p className="font-mono text-base font-semibold text-foreground">{p.matchedVulnerability.cveId}</p>
+                  <p className="text-sm font-medium text-danger">{p.matchedVulnerability.name}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="destructive" className="font-mono font-bold">
-                    CVSS {selectedProspect.matchedVulnerability.cvss}
+                  <Badge variant="destructive" className="font-mono">
+                    CVSS {p.matchedVulnerability.cvss}
                   </Badge>
-                  <Badge variant="outline" className="border-red-500/30 text-red-600 dark:text-red-400 font-mono font-bold">
-                    EPSS {selectedProspect.matchedVulnerability.epssScore}
+                  <Badge variant="outline" className="border-danger/40 font-mono text-danger">
+                    EPSS {p.matchedVulnerability.epssScore}
                   </Badge>
                 </div>
               </div>
-
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                {selectedProspect.matchedVulnerability.summary}
-              </p>
-
-              <div className="p-3.5 rounded-xl bg-card border border-red-500/20 text-xs shadow-2xs">
-                <span className="text-[11px] font-bold text-red-600 dark:text-red-400 uppercase tracking-wider block mb-1">
-                  Executive Impact:
-                </span>
-                <p className="text-muted-foreground leading-relaxed">
-                  {selectedProspect.matchedVulnerability.businessImpact}
-                </p>
+              <p className="text-sm leading-relaxed text-muted-foreground">{p.matchedVulnerability.summary}</p>
+              <div className="rounded-xl border border-danger/30 bg-card p-4">
+                <h4 className="mb-1 text-xs font-semibold uppercase tracking-wider text-danger">Executive impact</h4>
+                <p className="text-sm leading-relaxed text-muted-foreground">{p.matchedVulnerability.businessImpact}</p>
               </div>
-            </div>
+            </section>
 
-            {/* Public Talks & Publications */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                <FileText className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-                <span>Recent Talks, Papers & Accolades</span>
-              </h4>
-              <div className="space-y-2">
-                {selectedProspect.researchSignals.recentPublications.map((pub, idx) => (
-                  <div key={idx} className="p-2.5 rounded-xl bg-card border border-border text-xs text-foreground flex items-center gap-2 shadow-2xs">
-                    <Award className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
+            <section className="space-y-3" aria-labelledby="dossier-signals">
+              <h3 id="dossier-signals" className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <FileText className="h-4 w-4 text-steel" aria-hidden="true" />
+                Recent talks, papers and accolades
+              </h3>
+              <ul className="space-y-2">
+                {p.researchSignals.recentPublications.map(pub => (
+                  <li key={pub} className="flex items-center gap-2.5 rounded-xl border border-border bg-card p-3 text-sm text-foreground">
+                    <Award className="h-4 w-4 shrink-0 text-warning" aria-hidden="true" />
                     <span>{pub}</span>
-                  </div>
+                  </li>
                 ))}
-                {selectedProspect.researchSignals.recentTalks.map((talk, idx) => (
-                  <div key={idx} className="p-2.5 rounded-xl bg-card border border-border text-xs text-foreground flex items-center gap-2 shadow-2xs">
-                    <Radio className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 shrink-0" />
+                {p.researchSignals.recentTalks.map(talk => (
+                  <li key={talk} className="flex items-center gap-2.5 rounded-xl border border-border bg-card p-3 text-sm text-foreground">
+                    <Radio className="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
                     <span>{talk}</span>
-                  </div>
+                  </li>
                 ))}
-              </div>
-            </div>
+              </ul>
+            </section>
           </div>
 
-          {/* Footer CTA */}
-          <div className="p-5 border-t border-border bg-card/95 sticky bottom-0 z-10 backdrop-blur-md flex items-center justify-between">
-            <div className="text-xs text-muted-foreground font-medium">
-              Observer Mode: Email generated as Gmail draft.
-            </div>
-            <Button
-              variant="cyan"
-              onClick={handleReviewClick}
-              className="gap-2 font-bold"
-            >
-              <span>Review Outreach Draft</span>
-              <ArrowRight className="w-4 h-4" />
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-border p-5">
+            <p className="text-sm text-muted-foreground">Observer mode: the email is created as a Gmail draft.</p>
+            <Button variant="cyan" onClick={handleReviewClick}>
+              Review outreach draft
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Button>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </Dialog>
   );
 };

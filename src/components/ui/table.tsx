@@ -1,18 +1,28 @@
 import * as React from "react";
 import { cn } from "../../lib/utils";
 
-export const Table = React.forwardRef<
-  HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => (
-  <div className="relative w-full overflow-auto">
-    <table
-      ref={ref}
-      className={cn("w-full caption-bottom text-sm", className)}
-      {...props}
-    />
-  </div>
-));
+export interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
+  /** Accessible name; also makes the horizontal scroller keyboard-focusable */
+  label: string;
+}
+
+export const Table = React.forwardRef<HTMLTableElement, TableProps>(
+  ({ className, label, ...props }, ref) => (
+    <div
+      role="region"
+      aria-label={label}
+      tabIndex={0}
+      className="relative w-full overflow-x-auto"
+    >
+      <table
+        ref={ref}
+        aria-label={label}
+        className={cn("w-full caption-bottom text-sm", className)}
+        {...props}
+      />
+    </div>
+  )
+);
 Table.displayName = "Table";
 
 export const TableHeader = React.forwardRef<
@@ -21,7 +31,7 @@ export const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={cn("[&_tr]:border-b border-border bg-muted/30", className)}
+    className={cn("[&_tr]:border-b border-border bg-muted/60", className)}
     {...props}
   />
 ));
@@ -75,8 +85,9 @@ export const TableHead = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <th
     ref={ref}
+    scope="col"
     className={cn(
-      "h-10 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+      "h-11 px-4 text-left align-middle text-xs font-medium uppercase tracking-wider text-muted-foreground [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}

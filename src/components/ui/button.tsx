@@ -1,8 +1,9 @@
 import * as React from "react";
+import { motion, type HTMLMotionProps } from "motion/react";
 import { cn } from "../../lib/utils";
+import { springSnappy } from "./springs";
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "ref"> {
   variant?:
     | "default"
     | "destructive"
@@ -12,29 +13,27 @@ export interface ButtonProps
     | "link"
     | "cyan";
   size?: "default" | "sm" | "lg" | "icon";
-  asChild?: boolean;
 }
 
 const buttonVariants = {
   variant: {
     default:
-      "bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] hover:bg-primary/90 focus-visible:ring-ring",
+      "bg-primary text-primary-foreground hover:bg-primary/90",
     destructive:
-      "bg-red-600 text-white shadow-sm hover:bg-red-700 focus-visible:ring-red-500",
+      "bg-destructive text-destructive-foreground hover:bg-destructive/90",
     outline:
-      "border border-border bg-card text-card-foreground shadow-sm hover:bg-accent hover:text-accent-foreground hover:border-ring/40 focus-visible:ring-ring",
+      "border border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground hover:border-input",
     secondary:
-      "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 focus-visible:ring-ring",
-    ghost:
-      "hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring",
-    link: "text-primary underline-offset-4 hover:underline focus-visible:ring-ring",
-    cyan: "bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-semibold border border-cyan-300/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] active:translate-y-px",
+      "bg-secondary text-secondary-foreground hover:bg-secondary/70",
+    ghost: "hover:bg-accent hover:text-accent-foreground",
+    link: "text-brand underline underline-offset-4 hover:no-underline",
+    cyan: "bg-brand text-brand-foreground font-semibold hover:bg-brand/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]",
   },
   size: {
-    default: "h-9 px-4 py-2 text-sm",
-    sm: "h-8 rounded-md px-3 text-xs",
-    lg: "h-10 rounded-md px-6 text-sm",
-    icon: "h-9 w-9 p-0 inline-flex items-center justify-center",
+    default: "h-10 px-4 py-2 text-sm",
+    sm: "h-9 px-3.5 text-sm",
+    lg: "h-12 px-6 text-base",
+    icon: "h-10 w-10 p-0",
   },
 };
 
@@ -45,16 +44,21 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       variant = "default",
       size = "default",
       type = "button",
+      disabled,
       ...props
     },
     ref
   ) => {
     return (
-      <button
+      <motion.button
         ref={ref}
         type={type}
+        disabled={disabled}
+        whileHover={disabled ? undefined : { y: -1 }}
+        whileTap={disabled ? undefined : { scale: 0.96, y: 0 }}
+        transition={springSnappy}
         className={cn(
-          "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer",
+          "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-medium transition-colors duration-200 disabled:pointer-events-none disabled:opacity-50 select-none",
           buttonVariants.variant[variant],
           buttonVariants.size[size],
           className
