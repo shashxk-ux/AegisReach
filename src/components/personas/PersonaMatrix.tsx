@@ -39,7 +39,7 @@ export const PersonaMatrix: React.FC = () => {
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* Header Banner */}
-      <Card className="p-6 bg-gradient-to-r from-card via-purple-500/5 to-card border-border shadow-xs">
+      <Card className="p-6 bg-card border-border">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <Badge variant="purple" className="gap-2 mb-2">

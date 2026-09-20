@@ -60,16 +60,16 @@ export const AnalyticsFunnel: React.FC = () => {
     { label: 'Tier-1 Cheap Pass', count: funnelStats.tier1Validated, rate: '97.2%', icon: CheckCircle2, color: 'text-emerald-500' },
     { label: 'Tier-2 Unlocked', count: funnelStats.tier2Unlocked, rate: '24.1%', icon: Sparkles, color: 'text-amber-500' },
     { label: 'Human Approved', count: funnelStats.draftsApproved, rate: '12.9%', icon: Eye, color: 'text-cyan-500' },
-    { label: 'Delivered (Gmail)', count: funnelStats.emailsSent, rate: '99.4%', icon: Mail, color: 'text-blue-500' },
-    { label: 'Opened', count: Math.round(funnelStats.emailsSent * 0.682), rate: '68.2%', icon: Eye, color: 'text-purple-500' },
-    { label: 'Clicked Link / Brief', count: Math.round(funnelStats.emailsSent * 0.246), rate: '24.6%', icon: MousePointerClick, color: 'text-indigo-500' },
+    { label: 'Delivered (Gmail)', count: funnelStats.emailsSent, rate: '99.4%', icon: Mail, color: 'text-cyan-500' },
+    { label: 'Opened', count: Math.round(funnelStats.emailsSent * 0.682), rate: '68.2%', icon: Eye, color: 'text-cyan-400' },
+    { label: 'Clicked Link / Brief', count: Math.round(funnelStats.emailsSent * 0.246), rate: '24.6%', icon: MousePointerClick, color: 'text-cyan-300' },
     { label: 'Direct CISO Replies', count: Math.round(funnelStats.emailsSent * 0.182), rate: '18.2%', icon: MessageSquare, color: 'text-emerald-500' }
   ];
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* Top Banner */}
-      <Card className="p-6 bg-gradient-to-r from-card via-cyan-500/5 to-card">
+      <Card className="p-6 bg-card">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <Badge variant="cyan" className="gap-2 mb-2">

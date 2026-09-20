@@ -350,7 +350,7 @@ export const ObserverReview: React.FC = () => {
                   {isSyncing ? (
                     <RefreshCw className="w-3.5 h-3.5 animate-spin text-cyan-600 dark:text-cyan-400" />
                   ) : (
-                    <Mail className="w-3.5 h-3.5 text-rose-500" />
+                    <Mail className="w-3.5 h-3.5 text-muted-foreground" />
                   )}
                   <span>Push to Gmail Drafts</span>
                 </Button>

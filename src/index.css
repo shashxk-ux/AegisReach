@@ -2,58 +2,62 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ==========================================================================
+   DESIGN TOKENS
+   Neutral zinc canvas, one desaturated cyan accent. Semantic status colors
+   (emerald / amber / red) are reserved for state, never decoration.
+   ========================================================================== */
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #f4f4f5;
+  --foreground: #18181b;
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #18181b;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #0891b2;
+  --popover-foreground: #18181b;
+  --primary: #0f7a8c;
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #e0f2fe;
-  --accent-foreground: #0369a1;
-  --destructive: #ef4444;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #27272a;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #e6f4f6;
+  --accent-foreground: #0b5f6e;
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #cbd5e1;
-  --ring: #0891b2;
-  --radius: 0.625rem;
-  
-  --bg-primary: #080b12;
-  --bg-secondary: #0d121f;
-  --bg-card: rgba(18, 24, 38, 0.7);
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-accent: rgba(59, 130, 246, 0.3);
+  --border: #e4e4e7;
+  --input: #d4d4d8;
+  --ring: #0f7a8c;
+  --radius: 0.75rem;
+  --shadow-tint: 24 24 27;
 }
 
 .dark {
-  --background: #06090e;
-  --foreground: #f8fafc;
-  --card: #0c111d;
-  --card-foreground: #f8fafc;
-  --popover: #0c111d;
-  --popover-foreground: #f8fafc;
-  --primary: #06b6d4;
-  --primary-foreground: #020617;
-  --secondary: #131d2e;
-  --secondary-foreground: #f8fafc;
-  --muted: #131d2e;
-  --muted-foreground: #94a3b8;
-  --accent: #083344;
-  --accent-foreground: #22d3ee;
-  --destructive: #7f1d1d;
-  --destructive-foreground: #f8fafc;
-  --border: #1e293b;
-  --input: #1e293b;
-  --ring: #06b6d4;
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --card: #111113;
+  --card-foreground: #f4f4f5;
+  --popover: #161618;
+  --popover-foreground: #f4f4f5;
+  --primary: #5cc8d6;
+  --primary-foreground: #06181c;
+  --secondary: #1a1a1d;
+  --secondary-foreground: #e4e4e7;
+  --muted: #151517;
+  --muted-foreground: #a1a1aa;
+  --accent: #10262b;
+  --accent-foreground: #8fdce6;
+  --destructive: #ef4444;
+  --destructive-foreground: #fef2f2;
+  --border: #26262a;
+  --input: #2f2f35;
+  --ring: #5cc8d6;
+  --shadow-tint: 0 0 0;
 }
 
 @theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -76,11 +80,55 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
+  /* Neutral ramp: slate-* utilities resolve to zinc so the whole app sheds its blue-navy cast */
+  --color-slate-50: #fafafa;
+  --color-slate-100: #f4f4f5;
+  --color-slate-200: #e4e4e7;
+  --color-slate-300: #d4d4d8;
+  --color-slate-400: #a1a1aa;
+  --color-slate-500: #71717a;
+  --color-slate-600: #52525b;
+  --color-slate-700: #3f3f46;
+  --color-slate-800: #27272a;
+  --color-slate-900: #18181b;
+  --color-slate-950: #0d0d0f;
+
+  /* Accent ramp: cyan stays the brand hue but is pulled below 80% saturation */
+  --color-cyan-50: #ecf7f9;
+  --color-cyan-100: #d5eef2;
+  --color-cyan-200: #b1e0e8;
+  --color-cyan-300: #8fdce6;
+  --color-cyan-400: #5cc8d6;
+  --color-cyan-500: #3fb0c0;
+  --color-cyan-600: #1f8fa1;
+  --color-cyan-700: #0f7a8c;
+  --color-cyan-800: #0f6270;
+  --color-cyan-900: #124e59;
+  --color-cyan-950: #0c2e35;
+
+  /* Purple is retired as a brand hue: persona badges now read as a cool steel neutral */
+  --color-purple-50: #f1f3f8;
+  --color-purple-100: #e3e7f0;
+  --color-purple-200: #ccd3e2;
+  --color-purple-300: #b3bdd3;
+  --color-purple-400: #98a5c0;
+  --color-purple-500: #7c8aa8;
+  --color-purple-600: #64718f;
+  --color-purple-700: #4f5b76;
+  --color-purple-800: #3d465c;
+  --color-purple-900: #2d3446;
+  --color-purple-950: #1c212d;
+  --color-indigo-400: #98a5c0;
+  --color-indigo-500: #7c8aa8;
+  --color-indigo-600: #64718f;
 }
 
 @layer base {
   body {
-    font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
     margin: 0;
     padding: 0;
@@ -107,13 +155,13 @@ html.light {
 }
 
 html.light body {
-  background-color: #f1f5f9 !important;
-  color: #0f172a !important;
+  background-color: #f4f4f5 !important;
+  color: #18181b !important;
 }
 
 /* Base Canvas / Page Wrapper */
 html.light .bg-slate-100 {
-  background-color: #f1f5f9 !important;
+  background-color: #f4f4f5 !important;
 }
 
 /* Primary Elevated Cards & Panels (Level 1 Elevation - Pure White) */
@@ -125,7 +173,7 @@ html.light .bg-slate-900\/70,
 html.light .bg-slate-900\/80,
 html.light .bg-slate-900\/90 {
   background-color: #ffffff !important;
-  border-color: #e2e8f0 !important;
+  border-color: #e4e4e7 !important;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
 }
 
@@ -137,8 +185,8 @@ html.light .bg-slate-950\/60,
 html.light .bg-slate-950\/70,
 html.light .bg-slate-950\/80,
 html.light .bg-slate-950\/90 {
-  background-color: #f8fafc !important;
-  border-color: #e2e8f0 !important;
+  background-color: #fafafa !important;
+  border-color: #e4e4e7 !important;
 }
 
 
@@ -147,54 +195,54 @@ html.light .border-slate-800,
 html.light .border-slate-800\/60,
 html.light .border-slate-800\/70,
 html.light .border-slate-800\/80 {
-  border-color: #e2e8f0 !important;
+  border-color: #e4e4e7 !important;
 }
 
 html.light .border-slate-700,
 html.light .border-slate-700\/80 {
-  border-color: #cbd5e1 !important;
+  border-color: #d4d4d8 !important;
 }
 
 html.light .divide-slate-800\/60 > :not(:last-child) {
-  border-color: #f1f5f9 !important;
+  border-color: #f4f4f5 !important;
 }
 
 html.light .border-slate-900 {
-  border-color: #e2e8f0 !important;
+  border-color: #e4e4e7 !important;
 }
 
 /* Primary Header */
 html.light header {
   background-color: #ffffff !important;
-  border-color: #e2e8f0 !important;
+  border-color: #e4e4e7 !important;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
 }
 
 /* Mode Switcher inside header */
 html.light header .bg-slate-900\/90 {
-  background-color: #f1f5f9 !important;
-  border-color: #e2e8f0 !important;
+  background-color: #f4f4f5 !important;
+  border-color: #e4e4e7 !important;
 }
 
 /* Sidebar */
 html.light aside {
-  background-color: #f8fafc !important;
-  border-color: #e2e8f0 !important;
+  background-color: #fafafa !important;
+  border-color: #e4e4e7 !important;
 }
 
 html.light aside nav button {
-  color: #475569 !important;
+  color: #52525b !important;
 }
 
 html.light aside nav button:hover {
-  background-color: #f1f5f9 !important;
-  color: #0f172a !important;
+  background-color: #f4f4f5 !important;
+  color: #18181b !important;
 }
 
 html.light aside nav button.bg-gradient-to-r {
   background: #ffffff !important;
-  color: #0f172a !important;
-  border-color: #cbd5e1 !important;
+  color: #18181b !important;
+  border-color: #d4d4d8 !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
   font-weight: 700 !important;
 }
@@ -203,7 +251,7 @@ html.light aside nav button.bg-gradient-to-r {
 html.light aside .bg-slate-900\/60,
 html.light aside .bg-slate-900\/80 {
   background-color: #ffffff !important;
-  border-color: #e2e8f0 !important;
+  border-color: #e4e4e7 !important;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
 }
 
@@ -214,11 +262,11 @@ html.light h3,
 html.light h4, 
 html.light h5, 
 html.light h6 {
-  color: #0f172a !important;
+  color: #18181b !important;
 }
 
 html.light .text-white:not(button[class*="from-"]):not([class*="bg-cyan-"]):not([class*="bg-blue-"]):not([class*="bg-red-"]):not([class*="bg-purple-"]):not([class*="bg-emerald-"]):not([class*="bg-slate-900"]) {
-  color: #0f172a !important;
+  color: #18181b !important;
 }
 
 /* Badges with solid vibrant backgrounds must strictly keep crisp white text in ALL modes */
@@ -234,34 +282,34 @@ html.dark [class*="bg-red-600"] {
 }
 
 html.light .text-slate-100 {
-  color: #0f172a !important;
+  color: #18181b !important;
 }
 
 html.light .text-slate-200 {
-  color: #1e293b !important;
+  color: #27272a !important;
 }
 
 html.light .text-slate-300 {
-  color: #334155 !important;
+  color: #3f3f46 !important;
 }
 
 html.light .text-slate-400 {
-  color: #64748b !important;
+  color: #71717a !important;
 }
 
 html.light .text-slate-500 {
-  color: #64748b !important;
+  color: #71717a !important;
 }
 
 /* Brand & Badges */
 html.light .text-cyan-400,
 html.light .text-cyan-300 {
-  color: #0284c7 !important;
+  color: #0f7a8c !important;
 }
 
 html.light .text-purple-400,
 html.light .text-purple-300 {
-  color: #7c3aed !important;
+  color: #52607a !important;
 }
 
 html.light .text-emerald-400,
@@ -285,9 +333,9 @@ html.light .bg-cyan-950\/80,
 html.light .bg-cyan-950\/60,
 html.light .bg-cyan-950\/40,
 html.light .bg-cyan-950\/20 {
-  background-color: #e0f2fe !important;
-  border-color: #bae6fd !important;
-  color: #0369a1 !important;
+  background-color: #e6f4f6 !important;
+  border-color: #bfe3e9 !important;
+  color: #0b5f6e !important;
 }
 
 html.light .bg-purple-950,
@@ -295,9 +343,9 @@ html.light .bg-purple-950\/80,
 html.light .bg-purple-950\/60,
 html.light .bg-purple-950\/40,
 html.light .bg-purple-950\/20 {
-  background-color: #f3e8ff !important;
-  border-color: #e9d5ff !important;
-  color: #6b21a8 !important;
+  background-color: #eef1f6 !important;
+  border-color: #d9dfea !important;
+  color: #3f4a5f !important;
 }
 
 html.light .bg-emerald-950,
@@ -346,30 +394,30 @@ html.light .bg-blue-950\/20 {
 /* Neutral slate pill badges */
 html.light .bg-slate-800,
 html.light .bg-slate-800\/80 {
-  background-color: #f1f5f9 !important;
-  border-color: #e2e8f0 !important;
-  color: #475569 !important;
+  background-color: #f4f4f5 !important;
+  border-color: #e4e4e7 !important;
+  color: #52525b !important;
 }
 
 /* Banner Gradients in Light Mode */
 html.light .bg-gradient-to-r.from-slate-900 {
-  background: linear-gradient(90deg, #ffffff 0%, #f8fafc 100%) !important;
-  border-color: #e2e8f0 !important;
+  background: linear-gradient(90deg, #ffffff 0%, #fafafa 100%) !important;
+  border-color: #e4e4e7 !important;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
 html.light .bg-gradient-to-b.from-slate-900 {
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
-  border-color: #e2e8f0 !important;
+  background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%) !important;
+  border-color: #e4e4e7 !important;
 }
 
 /* Form inputs, select dropdowns & textareas (Subtle grey inset) */
 html.light input,
 html.light select,
 html.light textarea {
-  background-color: #f8fafc !important;
-  border-color: #cbd5e1 !important;
-  color: #0f172a !important;
+  background-color: #fafafa !important;
+  border-color: #d4d4d8 !important;
+  color: #18181b !important;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
 }
 
@@ -377,49 +425,49 @@ html.light input:focus,
 html.light select:focus,
 html.light textarea:focus {
   background-color: #ffffff !important;
-  border-color: #0284c7 !important;
-  outline: 2px solid rgba(2, 132, 199, 0.15) !important;
+  border-color: #0f7a8c !important;
+  outline: 2px solid rgba(15, 122, 140, 0.18) !important;
 }
 
 html.light input::placeholder,
 html.light textarea::placeholder {
-  color: #94a3b8 !important;
+  color: #a1a1aa !important;
 }
 
 /* Range input slider track */
 html.light input[type="range"] {
-  background-color: #e2e8f0 !important;
+  background-color: #e4e4e7 !important;
 }
 
 /* Table styling in Light Mode */
 html.light thead {
-  background-color: #f8fafc !important;
-  border-color: #e2e8f0 !important;
+  background-color: #fafafa !important;
+  border-color: #e4e4e7 !important;
 }
 
 html.light thead th {
-  color: #64748b !important;
+  color: #71717a !important;
 }
 
 html.light tbody tr:hover {
-  background-color: #f8fafc !important;
+  background-color: #fafafa !important;
 }
 
 html.light tbody td {
-  border-color: #f1f5f9 !important;
+  border-color: #f4f4f5 !important;
 }
 
 /* Drawer & Modal styling in Light Mode */
 html.light .bg-slate-950.border-l {
   background-color: #ffffff !important;
-  border-color: #e2e8f0 !important;
+  border-color: #e4e4e7 !important;
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1) !important;
 }
 
 html.light .bg-slate-900\/50.sticky,
 html.light .bg-slate-900\/80.sticky {
   background-color: rgba(255, 255, 255, 0.95) !important;
-  border-color: #e2e8f0 !important;
+  border-color: #e4e4e7 !important;
 }
 
 /* Toast styling in Light Mode */
@@ -430,36 +478,155 @@ html.light .pointer-events-auto.border {
 
 /* Light scrollbar */
 html.light ::-webkit-scrollbar-track {
-  background: #f8fafc;
+  background: #fafafa;
 }
 html.light ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border: 2px solid #f8fafc;
+  background: #d4d4d8;
+  border: 2px solid #fafafa;
 }
 html.light ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #a1a1aa;
 }
 
 /* ==========================================================================
-   DARK THEME BASE & TACTILE POLISH
+   COMPREHENSIVE DARK MODE OPTIMIZATION
+   Layered elevation system: every surface reads as a distinct depth against
+   a near-black canvas, borders are visible without glowing, and unselected
+   interactive elements keep enough contrast to signal affordance.
    ========================================================================== */
 html.dark {
   color-scheme: dark;
 }
 
 html.dark body {
-  background-color: #080c14;
-  color: #f1f5f9;
+  background-color: #09090b;
+  color: #f4f4f5;
+}
+
+/* Level 1 elevation — primary cards & panels sit visibly above the canvas */
+html.dark .bg-slate-900,
+html.dark .bg-slate-900\/40,
+html.dark .bg-slate-900\/50,
+html.dark .bg-slate-900\/60,
+html.dark .bg-slate-900\/70,
+html.dark .bg-slate-900\/80,
+html.dark .bg-slate-900\/90 {
+  background-color: #131316 !important;
+  border-color: #2a2a2f !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+}
+
+/* Level 2 — nested/recessed tiles read darker than their parent, not blended */
+html.dark .bg-slate-950,
+html.dark .bg-slate-950\/40,
+html.dark .bg-slate-950\/50,
+html.dark .bg-slate-950\/60,
+html.dark .bg-slate-950\/70,
+html.dark .bg-slate-950\/80,
+html.dark .bg-slate-950\/90 {
+  background-color: #0c0c0e !important;
+  border-color: #222226 !important;
+}
+
+/* Borders & dividers — lifted off near-black so structure is legible */
+html.dark .border-slate-800,
+html.dark .border-slate-800\/60,
+html.dark .border-slate-800\/70,
+html.dark .border-slate-800\/80 {
+  border-color: #2a2a2f !important;
+}
+
+html.dark .border-slate-700,
+html.dark .border-slate-700\/80 {
+  border-color: #3f3f46 !important;
+}
+
+html.dark .divide-slate-800\/60 > :not(:last-child) {
+  border-color: #1f1f23 !important;
+}
+
+html.dark .border-slate-900 {
+  border-color: #2a2a2f !important;
+}
+
+/* Header & Sidebar — distinct plane from the page canvas, not flush with it */
+html.dark header {
+  background-color: #0c0c0e !important;
+  border-color: #2a2a2f !important;
+}
+
+html.dark aside {
+  background-color: #0c0c0e !important;
+  border-color: #2a2a2f !important;
+}
+
+html.dark aside nav button {
+  color: #a1a1aa;
+}
+
+html.dark aside nav button:hover {
+  background-color: #1a1a1e;
+  color: #f4f4f5;
+}
+
+/* Unselected pills / outline buttons — visible resting border, not invisible
+   until hovered. Complements the bg-card + border-border fix in button.tsx */
+html.dark button[class*="border-border"]:not([class*="bg-gradient"]) {
+  background-color: #131316;
+}
+
+html.dark button[class*="border-border"]:hover:not([class*="bg-gradient"]) {
+  border-color: #3f3f46 !important;
+  background-color: #1a1a1e;
+}
+
+/* Muted / secondary text kept above 4.5:1 against dark surfaces */
+html.dark .text-slate-500 {
+  color: #a1a1aa !important;
+}
+
+html.dark .text-slate-400 {
+  color: #b0b0b8 !important;
+}
+
+/* Table & drawer surfaces */
+html.dark thead {
+  background-color: #0c0c0e !important;
+  border-color: #2a2a2f !important;
+}
+
+html.dark tbody tr:hover {
+  background-color: #17171a !important;
+}
+
+html.dark tbody td {
+  border-color: #1f1f23 !important;
+}
+
+/* Inputs get a lifted surface distinct from the page, with a clear focus state */
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #0e0e10 !important;
+  border-color: #34343a !important;
+}
+
+html.dark input:focus,
+html.dark select:focus,
+html.dark textarea:focus {
+  background-color: #131316 !important;
+  border-color: #5cc8d6 !important;
+  outline: 2px solid rgba(92, 200, 214, 0.22) !important;
 }
 
 html.dark ::-webkit-scrollbar-track {
-  background: #080c14;
+  background: #09090b;
 }
 html.dark ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #2a2a2f;
 }
 html.dark ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #3f3f46;
 }
 
 ::-webkit-scrollbar {
@@ -476,20 +643,107 @@ button:active:not(:disabled) {
   transition: transform 0.08s ease;
 }
 
-/* Custom specular glow effects */
-.glow-cyan {
-  box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.35);
+/* Edge highlights (replaces neon outer glows): a 1px inner ring in the accent hue */
+.glow-cyan { box-shadow: inset 0 0 0 1px rgba(92, 200, 214, 0.28); }
+.glow-violet { box-shadow: inset 0 0 0 1px rgba(124, 138, 168, 0.28); }
+.glow-emerald { box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.26); }
+.glow-amber { box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.26); }
+
+/* ==========================================================================
+   POLISH LAYER: type rhythm, focus, selection, motion
+   ========================================================================== */
+::selection {
+  background: rgba(92, 200, 214, 0.28);
+  color: inherit;
 }
 
-.glow-violet {
-  box-shadow: 0 0 20px -3px rgba(139, 92, 246, 0.35);
+html.light ::selection {
+  background: rgba(15, 122, 140, 0.2);
 }
 
-.glow-emerald {
-  box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.35);
+svg.lucide {
+  stroke-width: 1.6;
 }
 
-.glow-amber {
-  box-shadow: 0 0 20px -3px rgba(245, 158, 11, 0.35);
+.font-mono,
+.tabular {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Tinted diffusion shadow: takes its hue from the surface, never a flat grey */
+.shadow-diffuse {
+  box-shadow:
+    0 1px 0 0 rgb(var(--shadow-tint) / 0.04),
+    0 18px 36px -18px rgb(var(--shadow-tint) / 0.22);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes soft-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+/* Route change: page root and its first-level sections cascade in */
+.page-enter > * {
+  animation: rise-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.page-enter > * > * {
+  animation: rise-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.page-enter > * > *:nth-child(1) { animation-delay: 40ms; }
+.page-enter > * > *:nth-child(2) { animation-delay: 90ms; }
+.page-enter > * > *:nth-child(3) { animation-delay: 140ms; }
+.page-enter > * > *:nth-child(4) { animation-delay: 190ms; }
+.page-enter > * > *:nth-child(5) { animation-delay: 240ms; }
+.page-enter > * > *:nth-child(n+6) { animation-delay: 290ms; }
+
+.animate-pulse,
+.animate-ping {
+  animation: soft-pulse 2.4s ease-in-out infinite;
+}
+
+.skeleton {
+  background: linear-gradient(100deg, var(--muted) 30%, var(--secondary) 50%, var(--muted) 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+  border-radius: var(--radius-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

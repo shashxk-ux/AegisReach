@@ -1,15 +1,24 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { Button, Badge } from '../ui';
-import { 
-  Coins, 
-  Eye, 
-  Zap, 
-  Mail,
-  Sun,
-  Moon,
-  Radio
-} from 'lucide-react';
+import { Button } from '../ui';
+import { Coins, Eye, Zap, Mail, Sun, Moon } from 'lucide-react';
+
+const LogoMark: React.FC = () => (
+  <svg viewBox="0 0 32 32" className="w-8 h-8 shrink-0" aria-hidden="true">
+    <path
+      d="M16 3.2 4.6 7.4v8.1c0 6.3 4.5 11.2 11.4 13.3 6.9-2.1 11.4-7 11.4-13.3V7.4L16 3.2Z"
+      className="fill-foreground"
+    />
+    <path
+      d="M16 8.4v15.2M9.6 14.2h12.8"
+      className="stroke-background"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      fill="none"
+    />
+    <circle cx="16" cy="14.2" r="3.1" className="fill-cyan-400 stroke-background" strokeWidth="1.8" />
+  </svg>
+);
 
 export const Header: React.FC = () => {
   const { mode, setMode, credits, showToast, theme, toggleTheme } = useApp();
@@ -36,117 +45,100 @@ export const Header: React.FC = () => {
     showToast('success', 'Credits Replenished', '+500 Apollo/ZoomInfo prospecting credits added to balance.');
   };
 
+  const isObserver = mode === 'observer';
+
   return (
-    <header className="h-16 border-b border-border bg-card/95 backdrop-blur-xl px-6 flex items-center justify-between sticky top-0 z-40 transition-colors duration-200 shadow-xs">
-      {/* Left: Brand & Threat Engine Status */}
-      <div className="flex items-center gap-3.5">
-        {/* Circular Placeholder */}
-        <div 
-          className="w-9 h-9 rounded-full bg-muted border border-border flex items-center justify-center shrink-0 shadow-2xs"
-          title="AegisReach"
-        >
-          <div className="w-3.5 h-3.5 rounded-full bg-muted-foreground/25" />
-        </div>
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-base font-bold tracking-tight text-foreground flex items-center">
-              Aegis<span className="text-cyan-600 dark:text-cyan-400">Reach</span>
-            </h1>
-            <Badge variant="cyan" className="text-[10px] font-bold tracking-wide uppercase px-2 py-0.5">
-              CISO Intelligence
-            </Badge>
-          </div>
-          <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-medium">
-            <Radio className="w-3 h-3 text-emerald-500 animate-pulse" />
-            <span>Open Threat Feeds Active (MISP & KEV)</span>
+    <header className="h-16 border-b border-border bg-background/80 backdrop-blur-xl px-4 md:px-6 grid grid-cols-[1fr_auto_1fr] items-center gap-4 sticky top-0 z-40 transition-colors duration-200">
+      {/* Left: brand */}
+      <div className="flex items-center gap-3 min-w-0">
+        <LogoMark />
+        <div className="min-w-0 leading-tight">
+          <h1 className="text-[15px] font-semibold tracking-tight text-foreground">
+            Aegis<span className="text-cyan-600 dark:text-cyan-400">Reach</span>
+          </h1>
+          <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+            <span className="relative flex w-1.5 h-1.5">
+              <span className="absolute inset-0 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="relative w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            </span>
+            <span className="truncate hidden sm:inline">MISP &amp; CISA KEV feeds live</span>
           </div>
         </div>
       </div>
 
-      {/* Middle: Mode Switcher (Observer Mode vs Autopilot) */}
-      <nav aria-label="Dispatch Mode" className="flex items-center bg-muted/60 border border-border p-1 rounded-xl shadow-2xs">
+      {/* Center: dispatch mode, sliding segmented control */}
+      <nav
+        aria-label="Dispatch Mode"
+        className="relative grid grid-cols-2 items-center rounded-xl border border-border bg-muted p-1"
+      >
+        <span
+          aria-hidden="true"
+          className={`absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-lg border bg-card shadow-diffuse transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isObserver ? 'translate-x-0 border-cyan-500/30' : 'translate-x-full border-amber-500/30'
+          }`}
+        />
         <button
           type="button"
           onClick={() => handleToggleMode('observer')}
-          aria-pressed={mode === 'observer'}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 cursor-pointer ${
-            mode === 'observer'
-              ? 'bg-card text-cyan-700 dark:text-cyan-300 shadow-xs border border-border'
-              : 'text-muted-foreground hover:text-foreground'
+          aria-pressed={isObserver}
+          className={`relative z-10 flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors duration-200 cursor-pointer ${
+            isObserver ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          <Eye className={`w-3.5 h-3.5 ${mode === 'observer' ? 'text-cyan-600 dark:text-cyan-400' : 'text-muted-foreground'}`} />
+          <Eye className={`w-3.5 h-3.5 ${isObserver ? 'text-cyan-600 dark:text-cyan-400' : ''}`} />
           <span>Observer Mode</span>
-          <Badge
-            variant={mode === 'observer' ? 'cyan' : 'secondary'}
-            className="text-[10px] px-1.5 py-0 font-mono font-medium"
-          >
-            Drafts Only
-          </Badge>
+          <span className="hidden xl:inline font-mono text-[10px] text-muted-foreground">Drafts only</span>
         </button>
 
         <button
           type="button"
           onClick={() => handleToggleMode('autopilot')}
-          aria-pressed={mode === 'autopilot'}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 cursor-pointer ${
-            mode === 'autopilot'
-              ? 'bg-card text-purple-700 dark:text-purple-300 shadow-xs border border-border'
-              : 'text-muted-foreground hover:text-foreground'
+          aria-pressed={!isObserver}
+          className={`relative z-10 flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors duration-200 cursor-pointer ${
+            !isObserver ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          <Zap className={`w-3.5 h-3.5 ${mode === 'autopilot' ? 'text-purple-600 dark:text-purple-400' : 'text-muted-foreground'}`} />
+          <Zap className={`w-3.5 h-3.5 ${!isObserver ? 'text-amber-600 dark:text-amber-400' : ''}`} />
           <span>Autopilot</span>
-          <Badge
-            variant={mode === 'autopilot' ? 'purple' : 'secondary'}
-            className="text-[10px] px-1.5 py-0 font-mono font-medium"
-          >
-            Auto-Send
-          </Badge>
+          <span className="hidden xl:inline font-mono text-[10px] text-muted-foreground">Auto-send</span>
         </button>
       </nav>
 
-      {/* Right: Credits, Connected Gmail, and Theme Toggle */}
-      <div className="flex items-center gap-2.5">
-        {/* Tier-2 Credits Badge */}
+      {/* Right: credits, mailbox, theme */}
+      <div className="flex items-center justify-end gap-2">
         <Button
           variant="outline"
           size="sm"
           onClick={handleAddCredits}
           title="Click to simulate adding +500 credits"
-          className="gap-2 font-normal text-foreground hover:border-amber-500/50 hover:text-amber-600 dark:hover:text-amber-300 group"
+          className="gap-2 font-normal text-foreground"
         >
-          <Coins className="w-3.5 h-3.5 text-amber-500 group-hover:rotate-12 transition-transform" />
-          <span className="font-bold font-mono text-foreground">{credits.toLocaleString()}</span>
-          <span className="text-muted-foreground text-[11px] font-medium hidden sm:inline">Credits</span>
+          <Coins className="w-3.5 h-3.5 text-muted-foreground" />
+          <span className="font-semibold font-mono text-foreground">{credits.toLocaleString()}</span>
+          <span className="text-muted-foreground text-[11px] hidden lg:inline">credits</span>
         </Button>
 
-        {/* Gmail Account Status */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-md border border-border bg-card text-xs shadow-2xs">
-          <div className="relative">
-            <Mail className="w-3.5 h-3.5 text-rose-500" />
-            <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-            <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-500" />
-          </div>
-          <span className="text-foreground font-medium hidden md:inline">shashank@aegisreach.ai</span>
-          <Badge variant="emerald" className="text-[10px] px-1.5 py-0 font-mono font-semibold">
+        <div className="hidden md:flex items-center gap-2 h-8 px-3 rounded-lg border border-border bg-card text-xs">
+          <Mail className="w-3.5 h-3.5 text-muted-foreground" />
+          <span className="text-foreground hidden lg:inline">shashank@aegisreach.ai</span>
+          <span className="flex items-center gap-1 font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
             OAuth
-          </Badge>
+          </span>
         </div>
 
-        {/* Dark / Light Mode Toggle Button */}
         <Button
           variant="outline"
           size="icon"
           onClick={toggleTheme}
           aria-label={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          className="rounded-lg"
+          className="h-8 w-8"
         >
           {theme === 'dark' ? (
-            <Sun className="w-4 h-4 text-amber-400 hover:rotate-45 transition-transform" />
+            <Sun className="w-4 h-4 text-muted-foreground" />
           ) : (
-            <Moon className="w-4 h-4 text-indigo-500 hover:-rotate-12 transition-transform" />
+            <Moon className="w-4 h-4 text-muted-foreground" />
           )}
         </Button>
       </div>

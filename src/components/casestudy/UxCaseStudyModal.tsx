@@ -17,7 +17,7 @@ export const UxCaseStudyModal: React.FC<UxCaseStudyModalProps> = ({ onClose }) =
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-12">
       {/* Top Banner */}
-      <div className="p-8 rounded-3xl bg-gradient-to-r from-purple-950/60 via-slate-900 to-slate-900 border border-purple-500/40 shadow-2xl relative overflow-hidden">
+      <div className="p-8 rounded-3xl bg-card border border-border shadow-diffuse relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
         
         {onClose && (
@@ -85,7 +85,7 @@ export const UxCaseStudyModal: React.FC<UxCaseStudyModalProps> = ({ onClose }) =
           </div>
 
           <div className="p-4 rounded-xl bg-muted/40 border border-border space-y-2">
-            <div className="font-bold text-blue-500">The API Credit Drain</div>
+            <div className="font-semibold text-cyan-600 dark:text-cyan-400">The API Credit Drain</div>
             <p className="text-muted-foreground leading-relaxed">
               Sales reps burn through expensive Apollo/ZoomInfo credits ($1–$3/lead) fetching contact records for domains that bounce or lack verified perimeters.
             </p>

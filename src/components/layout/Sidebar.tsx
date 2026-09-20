@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 import { useApp, TabType } from '../../context/AppContext';
 import { Badge, Button } from '../ui';
-import { 
-  Users, 
-  Filter, 
-  BrainCircuit, 
-  Send, 
-  Flame, 
-  BarChart3, 
-  ShieldCheck, 
-  PanelLeftClose, 
+import {
+  Users,
+  Filter,
+  BrainCircuit,
+  Send,
+  Flame,
+  BarChart3,
+  ShieldCheck,
+  PanelLeftClose,
   PanelLeftOpen,
-  Activity
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
   const { activeTab, setActiveTab, prospects } = useApp();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1024);
 
   const pendingDraftsCount = prospects.filter(p => p.outreachDraft.status === 'pending_review').length;
 
@@ -25,64 +24,33 @@ export const Sidebar: React.FC = () => {
     label: string;
     icon: typeof Users;
     badge: string;
-    badgeVariant: 'secondary' | 'cyan' | 'purple' | 'amber' | 'emerald';
+    attention?: boolean;
   }> = [
-    {
-      id: 'prospects',
-      label: 'Prospect Pipeline',
-      icon: Users,
-      badge: `${prospects.length} CISOs`,
-      badgeVariant: 'secondary',
-    },
-    {
-      id: 'icp',
-      label: 'ICP Definition Studio',
-      icon: Filter,
-      badge: '1,420 Pool',
-      badgeVariant: 'cyan',
-    },
-    {
-      id: 'personas',
-      label: 'Persona Decision Matrix',
-      icon: BrainCircuit,
-      badge: '4 Archetypes',
-      badgeVariant: 'purple',
-    },
+    { id: 'prospects', label: 'Prospect Pipeline', icon: Users, badge: `${prospects.length} CISOs` },
+    { id: 'icp', label: 'ICP Definition Studio', icon: Filter, badge: '1,420' },
+    { id: 'personas', label: 'Persona Decision Matrix', icon: BrainCircuit, badge: '4 types' },
     {
       id: 'review',
       label: 'Observer Review Console',
       icon: Send,
-      badge: pendingDraftsCount > 0 ? `${pendingDraftsCount} Ready` : 'Synced',
-      badgeVariant: pendingDraftsCount > 0 ? 'amber' : 'emerald',
+      badge: pendingDraftsCount > 0 ? `${pendingDraftsCount} ready` : 'Synced',
+      attention: pendingDraftsCount > 0,
     },
-    {
-      id: 'accounts',
-      label: 'Warmup & Inboxes',
-      icon: Flame,
-      badge: '98% Health',
-      badgeVariant: 'emerald',
-    },
-    {
-      id: 'analytics',
-      label: 'Telemetry & Funnel',
-      icon: BarChart3,
-      badge: '68% Open',
-      badgeVariant: 'cyan',
-    }
+    { id: 'accounts', label: 'Warmup & Inboxes', icon: Flame, badge: '98% health' },
+    { id: 'analytics', label: 'Telemetry & Funnel', icon: BarChart3, badge: '68% open' },
   ];
 
   return (
-    <aside 
-      className={`border-r border-border bg-card/60 backdrop-blur-md flex flex-col justify-between shrink-0 h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto transition-all duration-250 ease-in-out select-none ${
-        isCollapsed ? 'w-20 p-3' : 'w-76 lg:w-80 p-3.5'
+    <aside
+      className={`border-r border-border bg-background flex flex-col justify-between shrink-0 h-[calc(100dvh-4rem)] sticky top-16 overflow-y-auto transition-[width,padding] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] select-none ${
+        isCollapsed ? 'w-[4.5rem] p-3' : 'w-[19rem] p-4'
       }`}
     >
-      <div className="space-y-4">
-        {/* Collapse / Expand Toggle Bar */}
-        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between px-2'} mb-1`}>
+      <div className="space-y-6">
+        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between px-2'}`}>
           {!isCollapsed && (
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-              Navigation
+            <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.14em]">
+              Workspace
             </span>
           )}
           <Button
@@ -93,16 +61,11 @@ export const Sidebar: React.FC = () => {
             title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
             className="h-8 w-8 text-muted-foreground hover:text-foreground"
           >
-            {isCollapsed ? (
-              <PanelLeftOpen className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-            ) : (
-              <PanelLeftClose className="w-4 h-4" />
-            )}
+            {isCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
           </Button>
         </div>
 
-        {/* Navigation Items */}
-        <nav aria-label="Main Navigation" className="space-y-1">
+        <nav aria-label="Main Navigation" className="space-y-0.5">
           {navItems.map(item => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -113,89 +76,92 @@ export const Sidebar: React.FC = () => {
                 onClick={() => setActiveTab(item.id)}
                 aria-current={isActive ? 'page' : undefined}
                 title={isCollapsed ? item.label : undefined}
-                className={`w-full flex items-center rounded-xl text-xs font-semibold transition-all duration-150 group relative cursor-pointer ${
+                className={`w-full flex items-center rounded-lg text-[13px] font-medium transition-colors duration-200 group relative cursor-pointer ${
                   isCollapsed ? 'justify-center py-3 px-2' : 'justify-between px-3 py-2.5'
                 } ${
                   isActive
-                    ? 'bg-accent/70 text-accent-foreground border border-border shadow-xs'
+                    ? 'bg-muted text-foreground'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                 }`}
               >
-                {/* Active Left Accent Bar */}
                 {isActive && (
-                  <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-cyan-600 dark:bg-cyan-400 shadow-xs" />
+                  <span className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-cyan-500 dark:bg-cyan-400" />
                 )}
 
-                <div className={`flex items-center min-w-0 ${isCollapsed ? 'justify-center' : 'gap-2.5'}`}>
-                  <Icon className={`w-4 h-4 shrink-0 transition-colors ${
-                    isActive ? 'text-cyan-600 dark:text-cyan-400' : 'text-muted-foreground group-hover:text-foreground'
-                  }`} />
+                <div className={`flex items-center min-w-0 ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
+                  <Icon
+                    className={`w-4 h-4 shrink-0 transition-colors ${
+                      isActive ? 'text-cyan-600 dark:text-cyan-400' : 'text-muted-foreground group-hover:text-foreground'
+                    }`}
+                  />
                   {!isCollapsed && <span className="truncate whitespace-nowrap">{item.label}</span>}
                 </div>
 
-                {!isCollapsed && item.badge && (
-                  <Badge variant={item.badgeVariant} className="text-[10px] font-mono font-medium px-1.5 py-0">
-                    {item.badge}
-                  </Badge>
-                )}
+                {!isCollapsed &&
+                  (item.attention ? (
+                    <Badge variant="amber" className="font-mono px-1.5 py-0 whitespace-nowrap shrink-0 ml-2">
+                      {item.badge}
+                    </Badge>
+                  ) : (
+                    <span className="font-mono text-[10px] text-muted-foreground tabular whitespace-nowrap shrink-0 ml-2">{item.badge}</span>
+                  ))}
 
-                {/* Collapsed active indicator dot */}
-                {isCollapsed && isActive && (
-                  <span className="absolute right-1.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-cyan-600 dark:bg-cyan-400" />
+                {isCollapsed && item.attention && (
+                  <span className="absolute right-2 top-2 w-1.5 h-1.5 rounded-full bg-amber-500" />
                 )}
               </button>
             );
           })}
         </nav>
 
-        {/* Threat Intelligence Feed Widget */}
         {isCollapsed ? (
-          <div 
-            className="p-3 rounded-xl bg-card border border-border flex flex-col items-center justify-center relative group cursor-pointer hover:border-emerald-400/50 transition-colors shadow-2xs"
+          <button
+            type="button"
+            className="w-full flex items-center justify-center py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors relative cursor-pointer"
             title="MISP Open Threat Feed: 43 active KEV advisories matched"
             onClick={() => setIsCollapsed(false)}
           >
-            <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse absolute top-2 right-2" />
-          </div>
+            <ShieldCheck className="w-4 h-4" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse absolute top-2 right-3" />
+          </button>
         ) : (
-          <div className="p-3.5 rounded-xl bg-card border border-border space-y-2 shadow-2xs">
+          <section className="border-t border-border pt-5 px-2 space-y-2.5">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
-                <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <div className="flex items-center gap-2 text-xs font-medium text-foreground">
+                <ShieldCheck className="w-4 h-4 text-muted-foreground" />
                 <span>MISP Threat Feed</span>
               </div>
-              <div className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">LIVE</span>
-              </div>
+              <span className="flex items-center gap-1.5 font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                LIVE
+              </span>
             </div>
-            <p className="text-[11px] text-muted-foreground leading-relaxed">
-              Real-time cross-referencing of tech stacks against <strong>43 active CISA KEV</strong> vulnerabilities.
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Tech stacks cross-referenced against <span className="text-foreground font-medium">43 active CISA KEV</span>{' '}
+              vulnerabilities.
             </p>
-            <div className="pt-1 flex items-center justify-between text-[10px] text-muted-foreground font-mono border-t border-border mt-1">
-              <span>Feed: NVD / CISA</span>
-              <span className="text-cyan-600 dark:text-cyan-400 font-semibold">100% Synced</span>
+            <div className="flex items-center justify-between font-mono text-[10px] text-muted-foreground">
+              <span>NVD / CISA</span>
+              <span className="text-foreground">100% synced</span>
             </div>
-          </div>
+          </section>
         )}
       </div>
 
-      {/* Footer / Status Indicator */}
-      <div className={`pt-3 border-t border-border flex items-center ${isCollapsed ? 'justify-center' : 'justify-between text-xs text-muted-foreground'}`}>
-        <div className="flex items-center gap-2">
-          <div 
-            className="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center font-extrabold text-white text-[10px] shrink-0 shadow-xs"
+      <div className={`pt-4 border-t border-border flex items-center ${isCollapsed ? 'justify-center' : 'px-2'}`}>
+        <div className="flex items-center gap-2.5">
+          <div
+            className="w-8 h-8 rounded-lg bg-secondary border border-border flex items-center justify-center font-mono font-semibold text-foreground text-[10px] shrink-0"
             title="AegisReach Engine"
           >
             AR
           </div>
           {!isCollapsed && (
-            <div>
-              <div className="font-bold text-foreground text-[11px]">AegisReach 2.4</div>
-              <div className="text-[10px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                <Activity className="w-2.5 h-2.5" />
-                <span>Engine Healthy</span>
+            <div className="leading-tight">
+              <div className="font-medium text-foreground text-xs">AegisReach 2.4</div>
+              <div className="text-[10px] text-muted-foreground flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span>Engine healthy</span>
               </div>
             </div>
           )}

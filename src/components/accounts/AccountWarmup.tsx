@@ -26,7 +26,7 @@ export const AccountWarmup: React.FC = () => {
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* Top Banner */}
-      <Card className="p-6 bg-gradient-to-r from-card via-amber-500/5 to-card">
+      <Card className="p-6 bg-card">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <Badge variant="amber" className="gap-2 mb-2">
@@ -124,7 +124,7 @@ export const AccountWarmup: React.FC = () => {
                     </div>
                     <div className="w-full bg-muted rounded-full h-2 overflow-hidden border border-border">
                       <div
-                        className="bg-gradient-to-r from-cyan-600 to-cyan-500 h-full rounded-full transition-all duration-500"
+                        className="bg-cyan-500 h-full rounded-full transition-all duration-500"
                         style={{ width: `${usagePercent}%` }}
                       />
                     </div>

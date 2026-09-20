@@ -15,13 +15,15 @@ const MainContent: React.FC = () => {
   const { activeTab } = useApp();
 
   return (
-    <main className="flex-1 p-6 overflow-y-auto max-h-[calc(100vh-4rem)]">
-      {activeTab === 'prospects' && <ProspectTable />}
-      {activeTab === 'icp' && <IcpStudio />}
-      {activeTab === 'personas' && <PersonaMatrix />}
-      {activeTab === 'review' && <ObserverReview />}
-      {activeTab === 'accounts' && <AccountWarmup />}
-      {activeTab === 'analytics' && <AnalyticsFunnel />}
+    <main className="flex-1 min-w-0 px-4 py-6 md:px-8 md:py-8 overflow-y-auto max-h-[calc(100dvh-4rem)]">
+      <div key={activeTab} className="page-enter mx-auto w-full max-w-[1400px]">
+        {activeTab === 'prospects' && <ProspectTable />}
+        {activeTab === 'icp' && <IcpStudio />}
+        {activeTab === 'personas' && <PersonaMatrix />}
+        {activeTab === 'review' && <ObserverReview />}
+        {activeTab === 'accounts' && <AccountWarmup />}
+        {activeTab === 'analytics' && <AnalyticsFunnel />}
+      </div>
     </main>
   );
 };
@@ -29,7 +31,7 @@ const MainContent: React.FC = () => {
 export function App() {
   return (
     <AppProvider>
-      <div className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-400 transition-colors duration-200">
+      <div className="min-h-[100dvh] bg-background text-foreground flex flex-col font-sans selection:bg-cyan-500/25 transition-colors duration-200">
         <Header />
         <div className="flex flex-1 overflow-hidden">
           <Sidebar />

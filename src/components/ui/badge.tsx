@@ -16,20 +16,20 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const badgeVariants = {
   default:
-    "border-transparent bg-primary text-primary-foreground shadow-sm",
+    "border-transparent bg-primary text-primary-foreground",
   secondary:
     "border-transparent bg-secondary text-secondary-foreground",
   destructive:
     "border-transparent bg-red-600 text-white shadow-sm",
   outline: "text-foreground border-border",
-  cyan: "border-cyan-500/30 bg-cyan-50 text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-300 dark:border-cyan-500/30",
+  cyan: "border-cyan-500/25 bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
   emerald:
-    "border-emerald-500/30 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-500/30",
+    "border-emerald-500/25 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
   amber:
-    "border-amber-500/30 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-500/30",
+    "border-amber-500/25 bg-amber-500/10 text-amber-700 dark:text-amber-300",
   purple:
-    "border-purple-500/30 bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-500/30",
-  red: "border-red-500/30 bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300 dark:border-red-500/30",
+    "border-purple-500/25 bg-purple-500/10 text-purple-700 dark:text-purple-300",
+  red: "border-red-500/25 bg-red-500/10 text-red-700 dark:text-red-300",
 };
 
 export function Badge({
@@ -40,7 +40,7 @@ export function Badge({
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+        "inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium leading-4 tracking-tight transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
         badgeVariants[variant],
         className
       )}

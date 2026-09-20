@@ -18,17 +18,17 @@ export interface ButtonProps
 const buttonVariants = {
   variant: {
     default:
-      "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:ring-ring",
+      "bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] hover:bg-primary/90 focus-visible:ring-ring",
     destructive:
       "bg-red-600 text-white shadow-sm hover:bg-red-700 focus-visible:ring-red-500",
     outline:
-      "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring",
+      "border border-border bg-card text-card-foreground shadow-sm hover:bg-accent hover:text-accent-foreground hover:border-ring/40 focus-visible:ring-ring",
     secondary:
       "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 focus-visible:ring-ring",
     ghost:
       "hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring",
     link: "text-primary underline-offset-4 hover:underline focus-visible:ring-ring",
-    cyan: "bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-cyan-300 text-slate-950 font-bold shadow-md shadow-cyan-500/25 active:scale-[0.98] border border-cyan-300/40",
+    cyan: "bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-semibold border border-cyan-300/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] active:translate-y-px",
   },
   size: {
     default: "h-9 px-4 py-2 text-sm",
@@ -54,7 +54,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={type}
         className={cn(
-          "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer",
+          "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer",
           buttonVariants.variant[variant],
           buttonVariants.size[size],
           className
