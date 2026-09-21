@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.6.0] - 2026-09-21
+
+First-time user guide, so new users know what to do and in what order.
+
+### Added
+- **Welcome dialog** on the first visit: the six steps at a glance and a note that nothing sends without your approval.
+- **Guide button** in the header (with a `visited/6` counter) that opens a **Getting started drawer** with a progress bar, instructions for each step, a "You are here" marker and a button to open each screen. It can restart the walkthrough.
+- **Next-step bar** under every screen ("Continue to step N"), with a wrap-up on the last step.
+- "Open the getting started guide" in the command palette (`Ctrl/Cmd + K`).
+- Progress is saved in the browser.
+
+### Fixed
+- After a dialog closed during navigation, keyboard focus went back to the old button instead of the new page heading.
+- Welcome dialog now focuses "Start with step 1" without scrolling past its heading on short screens.
+
+---
+
 ## [2.5.0] - 2026-09-21
 
 Full interface redesign focused on accessibility (WCAG 2.2 AA), a calmer visual system, and consistent motion. Automated axe-core checks report zero violations across all six screens, the ICP spreadsheet and presets tabs, the dossier drawer, the filters popup and the command palette, in both light and dark themes.

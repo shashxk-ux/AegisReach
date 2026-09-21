@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
+import { OnboardingProvider } from './context/OnboardingProvider';
 import { Header } from './components/layout/Header';
 import { Sidebar } from './components/layout/Sidebar';
 import { MobileNav } from './components/layout/MobileNav';
 import { CommandPalette } from './components/layout/CommandPalette';
+import { GuideDrawer, NextStepBar, WelcomeDialog } from './components/layout/GettingStarted';
 import { NAV_ITEMS } from './components/layout/nav';
 import { ProspectTable } from './components/prospects/ProspectTable';
 import { ProspectDrawer } from './components/prospects/ProspectDrawer';
@@ -29,9 +31,18 @@ const MainContent: React.FC = () => {
       return;
     }
     window.scrollTo({ top: 0 });
-    const timer = window.setTimeout(() => {
+    // A dialog that closes as part of this navigation returns focus to its trigger when it finishes
+    // animating out, so wait for it to be gone before moving focus to the new page heading.
+    let timer = 0;
+    let attempts = 0;
+    const focusHeading = () => {
+      if (document.querySelector('dialog[open]') && attempts++ < 14) {
+        timer = window.setTimeout(focusHeading, 60);
+        return;
+      }
       document.querySelector<HTMLElement>('#main h1')?.focus({ preventScroll: true });
-    }, 50);
+    };
+    timer = window.setTimeout(focusHeading, 50);
     return () => window.clearTimeout(timer);
   }, [activeTab]);
 
@@ -45,6 +56,7 @@ const MainContent: React.FC = () => {
         {activeTab === 'accounts' && <AccountWarmup />}
         {activeTab === 'analytics' && <AnalyticsFunnel />}
       </PageTransition>
+      <NextStepBar />
     </main>
   );
 };
@@ -76,6 +88,8 @@ const Shell: React.FC = () => {
       </div>
       <MobileNav open={navOpen} onClose={() => setNavOpen(false)} />
       <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+      <WelcomeDialog />
+      <GuideDrawer />
       <ProspectDrawer />
       <ToastContainer />
     </div>
@@ -85,9 +99,11 @@ const Shell: React.FC = () => {
 export function App() {
   return (
     <AppProvider>
-      <MotionConfig reducedMotion="user">
-        <Shell />
-      </MotionConfig>
+      <OnboardingProvider>
+        <MotionConfig reducedMotion="user">
+          <Shell />
+        </MotionConfig>
+      </OnboardingProvider>
     </AppProvider>
   );
 }

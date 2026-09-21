@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from 'react';
-import { CornerDownLeft, Eye, Moon, Search, Sun, Zap, type LucideIcon } from 'lucide-react';
+import { BookOpen, CornerDownLeft, Eye, Moon, Search, Sun, Zap, type LucideIcon } from 'lucide-react';
 import { Dialog } from '../ui';
 import { useApp } from '../../context/AppContext';
+import { useOnboarding } from '../../context/use-onboarding';
 import { NAV_ITEMS } from './nav';
 import { AutoHeight } from '../ui/motion';
 
@@ -27,6 +28,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onClose })
 
 const PaletteBody: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { setActiveTab, setMode, showToast, theme, toggleTheme } = useApp();
+  const { openGuide } = useOnboarding();
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
 
@@ -63,6 +65,14 @@ const PaletteBody: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         },
       },
       {
+        id: 'guide',
+        label: 'Open the getting started guide',
+        hint: 'Six steps from choosing an audience to your first reply',
+        group: 'Actions',
+        icon: BookOpen,
+        run: openGuide,
+      },
+      {
         id: 'theme',
         label: theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
         hint: 'Change the color theme',
@@ -71,7 +81,7 @@ const PaletteBody: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         run: toggleTheme,
       },
     ],
-    [setActiveTab, setMode, showToast, theme, toggleTheme]
+    [setActiveTab, setMode, showToast, theme, toggleTheme, openGuide]
   );
 
   const results = commands.filter(c => {

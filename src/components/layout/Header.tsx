@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Button } from '../ui';
 import { AnimatedNumber } from '../ui/motion';
+import { GuideButton } from './GettingStarted';
 import { spring } from '../ui/springs';
 import { motion } from 'motion/react';
 import { Coins, Eye, Zap, Mail, Sun, Moon, Menu, Search } from 'lucide-react';
@@ -148,6 +149,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenNav, onOpenPalette }) => {
       </div>
 
       <div className="ml-auto flex items-center gap-2">
+        <GuideButton />
+
         <Button
           variant="outline"
           size="sm"
